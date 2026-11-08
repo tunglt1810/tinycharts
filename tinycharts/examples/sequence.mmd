@@ -1,0 +1,35 @@
+---
+title: "Signing in with a passkey"
+---
+stateDiagram-v2
+  [*] --> idle
+  idle: signed out
+  asked: sign in pressed
+  begun: login begun
+  challenged: challenge sent
+  prompting: phone asks
+  signed: face checked
+  returned: signature back
+  checking: login finishing
+  lookup: key asked for
+  keyed: key found
+  signed_in: signed in
+  state face <<choice>>
+  state valid <<choice>>
+  idle --> asked: sign in
+  asked --> begun: begin
+  begun --> challenged: challenge
+  challenged --> prompting: ask the phone
+  prompting --> face: Face ID
+  prompting --> face: a stranger looks
+  face --> signed: [face matches]
+  face --> idle: [else]
+  signed --> returned: signature
+  returned --> checking: finish
+  returned --> checking: replay an old one
+  checking --> lookup: find the key
+  lookup --> keyed: public key
+  keyed --> valid: verify
+  valid --> signed_in: [signature fits]
+  valid --> idle: [else]
+  signed_in --> idle: sign out

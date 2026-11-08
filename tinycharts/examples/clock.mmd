@@ -1,0 +1,30 @@
+---
+title: "A lighthouse keeper's day"
+---
+stateDiagram-v2
+  [*] --> sleep
+  sleep: 0:00 asleep under the light
+  watch: 3:00 the night watch
+  dawn: 6:00 dawn and breakfast
+  lens: 9:00 polishing the lens
+  radio: 12:00 the weather log
+  foghorn: fog: the horn
+  garden: 15:00 the garden and the oil
+  supper: 18:00 supper
+  night: 21:00 the light is on
+  late_oil: 21:00 oil by lantern
+  state lamp <<choice>>
+  sleep --> watch: next step
+  watch --> dawn: sunrise
+  dawn --> lens: next step
+  lens --> radio: next step
+  radio --> garden: next step
+  radio --> foghorn: fog rolls in
+  foghorn --> garden: fog lifts
+  garden --> garden: carry oil up [tank not full]
+  garden --> supper: next step
+  supper --> lamp: light the lamp
+  lamp --> night: [lamp burns]
+  lamp --> late_oil: [else]
+  late_oil --> night: oil by lantern
+  night --> sleep: next step

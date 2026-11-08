@@ -1,0 +1,21 @@
+{
+ "title": "Signing in with a passkey",
+ "checked": "Every reachable state checked (11 states, 41 with their data, 47 steps). All 3 rules hold.",
+ "rules": [
+  {
+   "rule": "Every step can happen, and none is a dead end",
+   "says": "Each of the 11 states is reached from the start, every step can fire, and no state leaves you stuck.",
+   "path": "Holds on every path."
+  },
+  {
+   "rule": "No sign-in without a fresh signature",
+   "says": "Keycloak signs you in only with a signature for the challenge it just sent.",
+   "path": "Take away the signature fits guard and it breaks in 10 steps: sign in, begin, challenge, ask the phone, Face ID, signature, replay an old one, find the key, public key, verify."
+  },
+  {
+   "rule": "The phone signs only for its owner",
+   "says": "The passkey signs nothing until Face ID knows the face.",
+   "path": "Take away the face matches guard and it breaks in 5 steps: sign in, begin, challenge, ask the phone, a stranger looks."
+  }
+ ]
+}

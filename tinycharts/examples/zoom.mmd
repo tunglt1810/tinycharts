@@ -1,0 +1,23 @@
+---
+title: "Finding a book in the library"
+---
+stateDiagram-v2
+  [*] --> building
+  building: the library, from the street
+  state floor {
+    [*] --> stacks
+    stacks: floor 2, the stacks
+    state shelf {
+      [*] --> row
+      row: shelf C, history
+      book: Ships of the North
+      row --> book: zoom in
+      book --> row: zoom out
+      book --> book: borrow it [on the shelf]
+      book --> book: bring it back [lent out]
+    }
+    stacks --> shelf: zoom in
+    shelf --> stacks: zoom out [looking at the shelf]
+  }
+  building --> floor: zoom in
+  floor --> building: zoom out [looking at the floor]

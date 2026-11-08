@@ -1,0 +1,11 @@
+{
+  "name": "tinycharts",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "bun test tests/"
+  },
+  "dependencies": {
+    "pele": "^1.13.0"
+  }
+}

@@ -1,0 +1,28 @@
+---
+title: "A recycling sorting line"
+---
+stateDiagram-v2
+  [*] --> tipped
+  tipped: tipped in the hopper
+  magnet: the magnet
+  jet: the air jets
+  screen: the glass screen
+  check: the camera check
+  picking: the picking line
+  baled: baled
+  lorry: the lorry is full
+  state clean <<choice>>
+  state room <<choice>>
+  tipped --> tipped: a greasy pizza box
+  tipped --> magnet: start the belt
+  magnet --> jet: pull the cans
+  jet --> screen: blow the bottles
+  screen --> check: shake out the glass
+  check --> clean: look
+  clean --> baled: [only paper left]
+  clean --> picking: [else]
+  picking --> tipped: pick it out
+  baled --> room: next load
+  room --> tipped: [lorry has room]
+  room --> lorry: [else]
+  lorry --> tipped: drive off

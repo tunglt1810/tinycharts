@@ -1,0 +1,18 @@
+---
+title: "A lost bag at the station"
+---
+stateDiagram-v2
+  [*] --> platform
+  platform: the platform guard has it
+  office: the ticket office has it
+  manager: the station manager has it
+  depot: lost property has it
+  found: the bag is found
+  platform --> office: wait
+  office --> manager: wait
+  manager --> depot: wait
+  platform --> found: they answer
+  office --> found: they answer
+  manager --> found: they answer
+  depot --> found: they answer
+  found --> platform: a new bag is lost

@@ -1,0 +1,25 @@
+---
+title: "A campsite at dusk"
+---
+stateDiagram-v2
+  [*] --> pitch
+  pitch: 17:30 pitching the tents
+  cooking: 18:30 the fire is lit, supper on
+  supper: 19:15 supper at the table
+  lake: 20:00 everyone down at the lake
+  stories: 20:45 stories and marshmallows
+  bedtime: 22:00 teeth, torches, tents
+  night: 23:30 owls and fireflies
+  bear: 1:00 a bear at the bear box
+  pitch --> cooking: light the fire
+  cooking --> supper: next step
+  supper --> supper: douse the fire [fire burns]
+  supper --> lake: walk to the lake [fire out]
+  lake --> stories: back to the fire
+  stories --> stories: douse the fire [fire burns]
+  stories --> bedtime: to bed [fire out]
+  bedtime --> bedtime: stow the food [food out]
+  bedtime --> night: lights out [food stowed]
+  night --> bear: a bear comes
+  bear --> night: the bear leaves
+  night --> pitch: sunrise

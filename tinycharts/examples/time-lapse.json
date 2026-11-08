@@ -1,0 +1,21 @@
+{
+ "title": "A beach, from dawn to night",
+ "checked": "Every reachable state checked (8 states, 20 with their data, 33 steps). All 3 rules hold.",
+ "rules": [
+  {
+   "rule": "Every step can happen, and none is a dead end",
+   "says": "Each of the 8 states is reached from the start, every step can fire, and no state leaves you stuck.",
+   "path": "Holds on every path."
+  },
+  {
+   "rule": "Nobody swims under a red flag",
+   "says": "Once the red flag is up, nobody goes back into the sea that day.",
+   "path": "Take away the green flag guard and it breaks in 5 steps: lifeguard on, next step, rip current, the rip eases, swim."
+  },
+  {
+   "rule": "No sunbed is under the tide",
+   "says": "At high tide and through the night, every sunbed is stacked on the promenade.",
+   "path": "Take away the beds stacked guard and it breaks in 5 steps: lifeguard on, next step, next step, lifeguard off, high tide."
+  }
+ ]
+}

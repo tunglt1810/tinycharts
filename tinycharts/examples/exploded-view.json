@@ -1,0 +1,21 @@
+{
+ "title": "A layer cake",
+ "checked": "Every reachable state checked (7 states, 12 with their data, 12 steps). All 3 rules hold.",
+ "rules": [
+  {
+   "rule": "Every step can happen, and none is a dead end",
+   "says": "Each of the 7 states is reached from the start, every step can fire, and no state leaves you stuck.",
+   "path": "Holds on every path."
+  },
+  {
+   "rule": "Each layer goes on a set layer",
+   "says": "A sponge is cold, and jam or cream has set, before the next layer goes on it.",
+   "path": "Take away the layer below is set guard and it breaks in 2 steps: add a layer, add a layer."
+  },
+  {
+   "rule": "The icing goes on last",
+   "says": "The icing goes on only when all five layers are on the board and the top one is cold.",
+   "path": "Take away the top is set guard and it breaks in 10 steps: add a layer, wait to set, add a layer, wait to set, add a layer, wait to set, add a layer, wait to set, add a layer, ice it."
+  }
+ ]
+}

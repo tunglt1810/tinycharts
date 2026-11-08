@@ -1,0 +1,38 @@
+---
+title: "Which house plant suits the room"
+---
+stateDiagram-v2
+  [*] --> light
+  light: bright window?
+  pets_b: bright · pets in the room?
+  pets_s: shade · pets in the room?
+  water_bp: bright, pets · water every week?
+  water_bn: bright, no pets · water every week?
+  water_sp: shade, pets · water every week?
+  water_sn: shade, no pets · water every week?
+  potted: potted, in the room
+  high_shelf: up on a high shelf
+  done: a plant in every room
+  state kitten <<choice>>
+  light --> pets_b: yes
+  light --> pets_s: no
+  pets_b --> water_bp: yes
+  pets_b --> water_bn: no
+  pets_s --> water_sp: yes
+  pets_s --> water_sn: no
+  water_bp --> potted: yes
+  water_bp --> potted: no
+  water_bn --> potted: yes
+  water_bn --> potted: no
+  water_sp --> potted: yes
+  water_sp --> potted: no
+  water_sn --> potted: yes
+  water_sn --> potted: no
+  potted --> kitten: a kitten comes
+  kitten --> potted: [plant is pet-safe]
+  kitten --> high_shelf: [else]
+  potted --> light: next room [a room is left]
+  potted --> done: next room [else]
+  high_shelf --> light: next room [a room is left]
+  high_shelf --> done: next room [else]
+  done --> light: start again

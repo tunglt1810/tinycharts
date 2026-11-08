@@ -1,0 +1,4 @@
+[
+  { "group": "Time", "key": "a", "type": "Timeline", "question": "how long each step takes, to scale" },
+  { "group": "Who", "key": "b", "type": "Sequence", "question": "who says what to whom, in order" }
+]

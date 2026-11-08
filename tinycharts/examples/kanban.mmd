@@ -1,0 +1,18 @@
+---
+title: "A tailor's orders"
+---
+stateDiagram-v2
+  [*] --> open
+  open: four orders in
+  working: at work
+  held: held up at the fitting
+  ready: all ready
+  state after <<choice>>
+  open --> after: move an order
+  working --> after: move an order
+  after --> ready: [all ready]
+  after --> held: [nothing can move]
+  after --> working: [else]
+  working --> working: the customer comes in [an order is at the fitting]
+  held --> working: the customer comes in [an order is at the fitting]
+  ready --> open: a new week

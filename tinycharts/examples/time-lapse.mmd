@@ -1,0 +1,27 @@
+---
+title: "A beach, from dawn to night"
+---
+stateDiagram-v2
+  [*] --> dawn
+  dawn: 6:00 dawn, the boats come in
+  morning: 9:00 lifeguard on duty
+  noon: 12:00 the busy hour
+  rip: 13:30 rip current, red flag
+  afternoon: 15:00 the tide comes up
+  sunset: 18:00 lifeguard off duty
+  dusk: 20:30 high tide, the bar opens
+  night: 23:00 lamps and stars
+  dawn --> morning: lifeguard on
+  morning --> morning: swim [green flag]
+  morning --> noon: next step
+  noon --> noon: swim [green flag]
+  noon --> rip: rip current
+  noon --> afternoon: next step
+  rip --> afternoon: the rip eases
+  afternoon --> afternoon: swim [green flag]
+  afternoon --> afternoon: stack sunbeds [beds out]
+  afternoon --> sunset: lifeguard off
+  sunset --> sunset: stack sunbeds [beds out]
+  sunset --> dusk: high tide [beds stacked]
+  dusk --> night: next step
+  night --> dawn: sunrise

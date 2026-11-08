@@ -1,0 +1,26 @@
+{
+ "title": "A dog's walk round the park",
+ "checked": "Every reachable state checked (11 states, 14 with their data, 19 steps). All 4 rules hold.",
+ "rules": [
+  {
+   "rule": "Every step can happen, and none is a dead end",
+   "says": "Each of the 11 states is reached from the start, every step can fire, and no state leaves you stuck.",
+   "path": "Holds on every path."
+  },
+  {
+   "rule": "On the lead by the road",
+   "says": "At the gate, the lamp post, the kiosk and on the way home, the dog is always on the lead.",
+   "path": "Take away the back at the gate guard and it breaks in 5 steps: set off, next step, next step, let him off, go home."
+  },
+  {
+   "rule": "Never in the pond",
+   "says": "Past the ducks the dog is on the lead, so it never jumps in the pond.",
+   "path": "Take away the on the lead guard and it breaks in 5 steps: set off, next step, next step, let him off, next step."
+  },
+  {
+   "rule": "The walk ends at the gate",
+   "says": "The dog goes home only from the gate, after the whole loop.",
+   "path": "Take away the back at the gate guard and it breaks in 1 step: go home."
+  }
+ ]
+}

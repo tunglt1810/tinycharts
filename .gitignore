@@ -1,0 +1,6 @@
+/.tmp
+/.superpowers
+node_modules/
+tests/fixtures/*.json
+/tinycharts/icons/out/
+.DS_Store

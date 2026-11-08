@@ -1,0 +1,16 @@
+{
+ "title": "Objects for technical sheets",
+ "checked": "Every reachable state checked (2 states, 2 with their data, 2 steps). All 2 rules hold.",
+ "rules": [
+  {
+   "rule": "Every step can happen, and none is a dead end",
+   "says": "Each of the 2 states is reached from the start, every step can fire, and no state leaves you stuck.",
+   "path": "Holds on every path."
+  },
+  {
+   "rule": "A request is answered before the next one",
+   "says": "The page waits for the reply before it sends again.",
+   "path": "Holds on every path."
+  }
+ ]
+}

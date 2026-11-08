@@ -1,0 +1,66 @@
+---
+title: "Web shop checkout, from cart to doorstep"
+---
+stateDiagram-v2
+  [*] --> cart
+  cart: cart
+  identified: signed in or guest
+  address: shipping address
+  address_bad: address rejected
+  method: shipping method
+  paying: card payment
+  declined: card declined
+  challenge: 3-D Secure
+  sca_failed: 3DS failed
+  fraud: fraud check
+  review: fraud review
+  reserving: stock reservation
+  out_of_stock: out of stock
+  shipped: shipped
+  delivered: delivered
+  cancelled: order cancelled
+  refunded: refunded
+  state addr_ok <<choice>>
+  state pay_ok <<choice>>
+  state sca_ok <<choice>>
+  state risk <<choice>>
+  state stock_ok <<choice>>
+  cart --> identified: sign in
+  cart --> identified: as guest
+  identified --> address: next step
+  address --> addr_ok: validate
+  addr_ok --> method: [valid address]
+  addr_ok --> address_bad: [else]
+  address_bad --> address: fix it
+  method --> paying: next step
+  paying --> pay_ok: charge card
+  pay_ok --> challenge: [card accepted]
+  pay_ok --> declined: [else]
+  declined --> paying: retry [tries left]
+  challenge --> sca_ok: answer 3DS
+  sca_ok --> fraud: [3DS passed]
+  sca_ok --> sca_failed: [else]
+  sca_failed --> paying: another card
+  fraud --> risk: score
+  risk --> reserving: [low risk]
+  risk --> review: [else]
+  review --> reserving: approve
+  review --> refunded: reject
+  reserving --> stock_ok: hold stock
+  stock_ok --> before_ship: [in stock]
+  stock_ok --> out_of_stock: [else]
+  out_of_stock --> refunded: refund
+  state before_ship {
+    created: order created
+    emailed: confirmation email
+    picking: warehouse pick
+    [*] --> created
+    created --> emailed: next step
+    emailed --> picking: next step
+  }
+  before_ship --> cancelled: cancel order
+  picking --> shipped: next step
+  shipped --> delivered: next step
+  cancelled --> refunded: refund
+  delivered --> [*]
+  refunded --> [*]

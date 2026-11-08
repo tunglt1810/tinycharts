@@ -1,0 +1,17 @@
+---
+title: "A bath: the tap fills it, the plug drains it"
+---
+stateDiagram-v2
+  [*] --> empty
+  empty: empty
+  part: partly full
+  full: full to the overflow
+  state level <<choice>>
+  empty --> level: turn the tap
+  part --> level: turn the tap
+  full --> full: turn the tap
+  part --> level: pull the plug
+  full --> level: pull the plug
+  level --> empty: [bath is empty]
+  level --> full: [at the overflow]
+  level --> part: [else]

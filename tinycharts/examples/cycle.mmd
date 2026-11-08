@@ -1,0 +1,23 @@
+---
+title: "A bee's trips to the flowers"
+---
+stateDiagram-v2
+  [*] --> hive
+  hive: the hive
+  meadow: the meadow
+  clover: the clover
+  pond: the pond
+  homeward: the way home
+  winter: winter cluster
+  state full <<choice>>
+  hive --> full: fly out
+  full --> meadow: [hive not full]
+  full --> winter: [else]
+  meadow --> clover: fly on
+  clover --> clover: sip nectar
+  clover --> pond: fly on [nectar in the basket]
+  pond --> homeward: fly on
+  homeward --> hive: unload
+  meadow --> homeward: rain shower
+  clover --> homeward: rain shower
+  winter --> hive: spring

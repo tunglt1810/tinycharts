@@ -1,0 +1,21 @@
+{
+ "title": "Bean seeds sown to beans picked",
+ "checked": "Every reachable state checked (8 states, 21 with their data, 32 steps). All 3 rules hold.",
+ "rules": [
+  {
+   "rule": "Every step can happen, and none is a dead end",
+   "says": "Each of the 8 states is reached from the start, every step can fire, and no state leaves you stuck.",
+   "path": "Holds on every path."
+  },
+  {
+   "rule": "Every seed is counted",
+   "says": "The plants still growing and the ones on the compost always add up to the 40 seeds in the packet.",
+   "path": "Holds on every path."
+  },
+  {
+   "rule": "No picking from a bare bed",
+   "says": "The basket fills only when at least one plant is left.",
+   "path": "Take away the some plants left guard and it breaks in 9 steps: next stage, next stage, next stage, next stage, next stage, slugs in the night, slugs in the night, slugs in the night, next stage."
+  }
+ ]
+}

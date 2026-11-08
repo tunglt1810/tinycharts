@@ -1,0 +1,23 @@
+---
+title: "Train coming"
+---
+stateDiagram-v2
+  [*] --> open
+  open: 0 s road open
+  warning: 2 s train detected, lights and bell
+  lowering: 11 s barrier coming down
+  down: 14 s barrier down
+  train: 20 s train on the crossing
+  clear: 26 s train gone
+  raising: 31 s barrier going up
+  open --> warning: train detected
+  warning --> warning: wait 6 s [not flashed]
+  warning --> lowering: lower barrier [lights flashed]
+  lowering --> down: barrier down
+  down --> down: another train [no second train yet]
+  down --> train: train arrives
+  train --> train: another train [no second train yet]
+  train --> clear: train leaves
+  clear --> train: train arrives [train due]
+  clear --> raising: raise barrier [crossing clear]
+  raising --> open: barrier up

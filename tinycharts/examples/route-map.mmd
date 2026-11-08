@@ -1,0 +1,35 @@
+---
+title: "A dog's walk round the park"
+---
+stateDiagram-v2
+  [*] --> walk
+  state walk {
+    [*] --> gate
+    gate: 9:00 the park gate, by the road
+    lamp: 9:05 the lamp post, a long sniff
+    oak: 9:12 the old oak
+    field: 9:20 the big field, the ball
+    squirrel: 9:26 a squirrel, a chase
+    pond: 9:35 past the duck pond
+    fountain: 9:42 a drink at the fountain
+    bench: 9:50 a rest on the bench
+    kiosk: 10:00 the kiosk, by the road
+    gate --> lamp: set off
+    lamp --> oak: next step
+    oak --> field: next step
+    field --> field: let him off [on the lead]
+    field --> field: lead on [off the lead]
+    field --> squirrel: a squirrel [off the lead]
+    squirrel --> field: whistle
+    field --> pond: next step [on the lead]
+    pond --> fountain: next step
+    fountain --> fountain: let him off [on the lead]
+    fountain --> fountain: lead on [off the lead]
+    fountain --> bench: next step
+    bench --> bench: lead on [off the lead]
+    bench --> kiosk: next step [on the lead]
+    kiosk --> gate: back to the gate
+  }
+  home: 10:10 home for breakfast
+  walk --> home: go home [back at the gate]
+  home --> walk: next walk

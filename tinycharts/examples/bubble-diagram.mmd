@@ -1,0 +1,27 @@
+---
+title: "An inspector's round of a small café"
+---
+stateDiagram-v2
+  [*] --> street
+  street: 9:00 on the pavement, at the door
+  terrace: 9:04 the terrace, 18 m²
+  seating: 9:10 the seating, 40 m², 20 seats
+  toilet: 9:16 the toilet, 4 m²
+  counter: 9:22 the counter, 10 m²
+  kitchen: 9:30 the kitchen, 16 m², staff only
+  store: 9:40 the store, 6 m²
+  report: 9:50 back on the pavement, the report
+  street --> terrace: next door
+  terrace --> seating: next door
+  seating --> toilet: next door [toilet still to see]
+  toilet --> seating: back out
+  seating --> counter: next door [kitchen still to see]
+  counter --> counter: hairnet on [no hairnet]
+  counter --> kitchen: into the kitchen [hairnet on]
+  kitchen --> store: next door
+  store --> seating: back out front
+  seating --> report: write the report [kitchen seen]
+  report --> street: next visit
+  street --> street: a group comes in [4 seats free]
+  terrace --> terrace: a group comes in [4 seats free]
+  seating --> seating: a group comes in [4 seats free]

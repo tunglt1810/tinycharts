@@ -1,0 +1,28 @@
+---
+title: "A lost umbrella finds its way home"
+---
+stateDiagram-v2
+  [*] --> left
+  left: 1 left on the bus
+  depot: 2 the depot at night
+  office: 3 lost property, No. 47
+  rain: 4 rain, and no umbrella
+  counter: 5 at the counter
+  wrong: 6 not that one
+  found: 7 the right one
+  walk: 8 home under it
+  home: 9 on its hook
+  state ask <<choice>>
+  left --> depot: next step
+  depot --> office: next step
+  office --> rain: next step
+  rain --> rain: wait for nine
+  rain --> counter: next step [office open]
+  counter --> counter: describe the handle
+  counter --> ask: ask for it
+  ask --> found: [duck handle described]
+  ask --> wrong: [else]
+  wrong --> counter: give it back
+  found --> walk: next step
+  walk --> home: next step
+  home --> left: another day

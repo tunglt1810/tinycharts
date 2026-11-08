@@ -1,0 +1,14 @@
+---
+title: "Why the bread did not rise"
+---
+stateDiagram-v2
+  [*] --> unchecked
+  unchecked: nothing checked yet
+  checking: checking the bones
+  explained: the cause is found
+  state next <<choice>>
+  unchecked --> next: check next bone
+  checking --> next: check next bone
+  next --> explained: [all six checked]
+  next --> checking: [else]
+  explained --> unchecked: bake again

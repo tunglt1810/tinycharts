@@ -1,0 +1,20 @@
+---
+title: "Bike or bus?"
+---
+stateDiagram-v2
+  [*] --> bus
+  bus: the bus is cheaper so far
+  even: the bike has paid for itself
+  bike: the bike is cheaper now
+  state count <<choice>>
+  bus --> count: ride
+  bus --> count: a week of rides
+  even --> count: ride
+  even --> count: a week of rides
+  bike --> count: ride
+  bike --> count: a week of rides
+  count --> bike: [past the break-even]
+  count --> even: [at the break-even]
+  count --> bus: [else]
+  even --> bus: start again
+  bike --> bus: start again

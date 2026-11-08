@@ -1,0 +1,26 @@
+---
+title: "A greenhouse"
+---
+stateDiagram-v2
+  [*] --> fine
+  fine: fine, 10 to 30 °C
+  cold: too cold, under 10 °C
+  heating: heater on
+  hot: too hot, over 30 °C
+  venting: vent open
+  fine --> fine: wait an hour
+  fine --> cold: night falls
+  fine --> hot: sun comes out
+  cold --> cold: wait an hour [first hour]
+  cold --> cold: shut vent [vent is open]
+  cold --> heating: heater on [vent is shut]
+  heating --> heating: wait an hour
+  heating --> fine: heater off
+  heating --> hot: sun comes out
+  hot --> hot: wait an hour [first hour]
+  hot --> hot: heater off [heater is on]
+  hot --> venting: open vent [heater is off]
+  venting --> venting: wait an hour
+  venting --> fine: shut vent
+  venting --> cold: night falls
+  venting --> cold: cold wind

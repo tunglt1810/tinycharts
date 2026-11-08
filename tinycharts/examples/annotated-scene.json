@@ -1,0 +1,21 @@
+{
+ "title": "A campsite at dusk",
+ "checked": "Every reachable state checked (8 states, 11 with their data, 12 steps). All 3 rules hold.",
+ "rules": [
+  {
+   "rule": "Every step can happen, and none is a dead end",
+   "says": "Each of the 8 states is reached from the start, every step can fire, and no state leaves you stuck.",
+   "path": "Holds on every path."
+  },
+  {
+   "rule": "No fire without a watcher",
+   "says": "The fire never burns while nobody is awake at camp.",
+   "path": "Take away the fire out guard and it breaks in 3 steps: light the fire, next step, walk to the lake."
+  },
+  {
+   "rule": "No food out at night",
+   "says": "From lights out, and when the bear comes, every bit of food is in the bear box.",
+   "path": "Take away the food stowed guard and it breaks in 8 steps: light the fire, next step, douse the fire, walk to the lake, back to the fire, douse the fire, to bed, lights out."
+  }
+ ]
+}

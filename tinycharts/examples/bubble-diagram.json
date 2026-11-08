@@ -1,0 +1,26 @@
+{
+ "title": "An inspector's round of a small café",
+ "checked": "Every reachable state checked (8 states, 22 with their data, 27 steps). All 4 rules hold.",
+ "rules": [
+  {
+   "rule": "Every step can happen, and none is a dead end",
+   "says": "Each of the 8 states is reached from the start, every step can fire, and no state leaves you stuck.",
+   "path": "Holds on every path."
+  },
+  {
+   "rule": "The kitchen only through the counter",
+   "says": "No door joins the seating to the kitchen. The only way in is behind the counter, where staff put a hairnet on, so in the kitchen and the store the hairnet is always on.",
+   "path": "Take away the hairnet on guard and it breaks in 6 steps: next door, next door, next door, back out, next door, into the kitchen."
+  },
+  {
+   "rule": "Never more guests than seats",
+   "says": "The seating has 20 seats. A group of four comes in only when four seats are free.",
+   "path": "Take away the 4 seats free guard and it breaks in 2 steps: a group comes in, a group comes in."
+  },
+  {
+   "rule": "The report comes after the kitchen",
+   "says": "The inspector writes the report only after she has seen the kitchen.",
+   "path": "Take away the kitchen seen guard and it breaks in 3 steps: next door, next door, write the report."
+  }
+ ]
+}

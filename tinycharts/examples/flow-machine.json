@@ -1,0 +1,21 @@
+{
+ "title": "A recycling sorting line",
+ "checked": "Every reachable state checked (8 states, 37 with their data, 43 steps). All 3 rules hold.",
+ "rules": [
+  {
+   "rule": "Every step can happen, and none is a dead end",
+   "says": "Each of the 8 states is reached from the start, every step can fire, and no state leaves you stuck.",
+   "path": "Holds on every path."
+  },
+  {
+   "rule": "No dirty bale",
+   "says": "A greasy pizza box spoils a bale of paper. It never goes into the baler.",
+   "path": "Take away the only paper left guard and it breaks in 6 steps: a greasy pizza box, start the belt, pull the cans, blow the bottles, shake out the glass, look."
+  },
+  {
+   "rule": "Three bales to a lorry",
+   "says": "The lorry carries 3 bales. It never takes a fourth.",
+   "path": "Take away the lorry has room guard and it breaks in 24 steps: start the belt, pull the cans, blow the bottles, shake out the glass, look, next load, start the belt, pull the cans, blow the bottles, shake out the glass, look, next load, start the belt, pull the cans, blow the bottles, shake out the glass, look, next load, start the belt, pull the cans, blow the bottles, shake out the glass, look, next load."
+  }
+ ]
+}

@@ -1,0 +1,13 @@
+---
+title: "The door"
+---
+stateDiagram-v2
+  [*] --> shut
+  shut: Shut
+  open: Open
+  shut --> open: open [unlocked]
+  open --> shut: close
+  shut --> shut: lock
+  shut --> shut: unlock
+  shut --> bolted: bolt
+  bolted --> shut: unbolt

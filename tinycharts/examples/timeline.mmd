@@ -1,0 +1,25 @@
+---
+title: "A loaf of bread, timed"
+---
+stateDiagram-v2
+  [*] --> bowl
+  bowl: flour in the bowl
+  mixing: mixing
+  kneading: kneading
+  first_rise: first rise
+  shaping: shaping
+  proofing: second rise
+  baking: baking
+  cooling: cooling
+  sliced: sliced
+  bowl --> mixing: next step
+  mixing --> kneading: next step
+  kneading --> first_rise: next step
+  first_rise --> first_rise: wait
+  first_rise --> shaping: next step [doubled]
+  shaping --> proofing: next step
+  proofing --> baking: next step
+  baking --> cooling: out of the oven
+  cooling --> cooling: wait
+  cooling --> sliced: slice it [cool]
+  sliced --> [*]: next step

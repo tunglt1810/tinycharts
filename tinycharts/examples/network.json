@@ -1,0 +1,31 @@
+{
+ "title": "A snow day: the school's phone chain",
+ "checked": "Every reachable state checked (3 states, 29 with their data, 55 steps). All 5 rules hold.",
+ "rules": [
+  {
+   "rule": "Every step can happen, and none is a dead end",
+   "says": "Each of the 3 states is reached from the start, every step can fire, and no state leaves you stuck.",
+   "path": "Holds on every path."
+  },
+  {
+   "rule": "News runs only along a call",
+   "says": "Everyone who knows is the head, or someone on the list rang them.",
+   "path": "Holds on every path."
+  },
+  {
+   "rule": "Off the list, never told",
+   "says": "The new family is not on the chain, so no call reaches them.",
+   "path": "Holds on every path."
+  },
+  {
+   "rule": "Settled means no one left to ring",
+   "says": "The chain stops only when every knower has rung everyone at home on their list.",
+   "path": "Take away the no one new heard guard and it breaks in 1 step: ring round."
+  },
+  {
+   "rule": "A round reaches someone new",
+   "says": "The calls go round only while each round tells at least one more person.",
+   "path": "Holds on every path."
+  }
+ ]
+}

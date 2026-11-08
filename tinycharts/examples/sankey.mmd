@@ -1,0 +1,36 @@
+---
+title: "Where a household's water goes"
+---
+stateDiagram-v2
+  [*] --> meter
+  meter: the water meter
+  mains: from the mains
+  barrel: from the rain barrel
+  shower: the shower
+  toilet: the toilet
+  washer: the washing machine
+  kitchen: the kitchen tap
+  garden: the garden hose
+  sewer: the sewer
+  soil: the soil
+  state src <<choice>>
+  state use <<choice>>
+  meter --> meter: fit a saver shower head
+  meter --> meter: connect the rain barrel
+  meter --> src: next litre
+  src --> barrel: [from the barrel]
+  src --> mains: [else]
+  mains --> use: follow it
+  barrel --> use: follow it
+  use --> shower: [to the shower]
+  use --> toilet: [to the toilet]
+  use --> washer: [to the washer]
+  use --> kitchen: [to the kitchen]
+  use --> garden: [else]
+  shower --> sewer: down the drain
+  toilet --> sewer: down the drain
+  washer --> sewer: down the drain
+  kitchen --> sewer: down the drain
+  garden --> soil: into the soil
+  sewer --> meter: back to the meter
+  soil --> meter: back to the meter

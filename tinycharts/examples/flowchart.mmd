@@ -1,0 +1,28 @@
+---
+title: "Fixing a flat bicycle tyre"
+---
+stateDiagram-v2
+  [*] --> flat
+  flat: flat tyre
+  wheel_off: wheel off
+  tube_out: tube out
+  dunked: tube in water
+  patched: patch on
+  new_tube: new tube
+  refitted: tube back in
+  pumped: pumped up
+  riding: back on the road
+  state holds <<choice>>
+  flat --> wheel_off: next step
+  wheel_off --> tube_out: next step
+  tube_out --> tube_out: feel the tyre
+  tube_out --> dunked: next step
+  dunked --> patched: patch it [a patch in the kit]
+  dunked --> new_tube: new tube
+  patched --> refitted: next step
+  new_tube --> refitted: next step
+  refitted --> pumped: next step
+  pumped --> holds: wait a minute
+  holds --> riding: [holds air]
+  holds --> wheel_off: [else]
+  riding --> [*]: ride home

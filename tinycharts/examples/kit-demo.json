@@ -1,0 +1,21 @@
+{
+ "title": "A bike repair stall",
+ "checked": "Every reachable state checked (4 states, 7 with their data, 8 steps). All 3 rules hold.",
+ "rules": [
+  {
+   "rule": "Every step can happen, and none is a dead end",
+   "says": "Each of the 4 states is reached from the start, every step can fire, and no state leaves you stuck.",
+   "path": "Holds on every path."
+  },
+  {
+   "rule": "No fix without the part",
+   "says": "A bike is never marked fixed unless the new part went on.",
+   "path": "Take away the has the part guard and it breaks in 2 steps: next bike, fix it."
+  },
+  {
+   "rule": "Every bike is ridden before it goes home",
+   "says": "The stall never hands back a bike nobody has test-ridden.",
+   "path": "Take away the ridden guard and it breaks in 5 steps: next bike, fix it, part arrives, fix it, hand back."
+  }
+ ]
+}

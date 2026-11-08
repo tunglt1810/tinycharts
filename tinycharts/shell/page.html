@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><!--TITLE--></title>
+<style>/*FONTS*/</style>
+<style>/*CSS*/</style>
+</head>
+<body>
+<header id="top">
+  <a id="back" href="index.html">&larr; All charts</a>
+  <div id="kind"><b id="kindName"></b><small id="kindAbout"></small></div>
+  <nav id="pager"><button id="prev" aria-label="Previous chart">&larr;</button><span id="pos"></span><button id="next" aria-label="Next chart">&rarr;</button></nav>
+  <button id="logicBtn" hidden>Show the logic</button>
+</header>
+<aside id="side">
+  <p class="try">Try it</p>
+  <div id="actions"></div>
+  <p id="hint"></p>
+  <p id="status" role="status"></p>
+  <pre id="error" hidden></pre>
+</aside>
+<main id="stage">
+<div id="frame">
+  <div id="where" hidden><b></b><span></span></div>
+  <div id="zoom" class="tools"><button data-z="out" aria-label="Zoom out">&minus;</button><span class="pct">100%</span><button data-z="in" aria-label="Zoom in">+</button><button data-z="fit">Fit</button></div>
+  <svg id="sheet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1400">
+    <defs>
+      <pattern id="isoGrid" width="69.282" height="40" patternUnits="userSpaceOnUse">
+        <path d="M0 0L69.282 40M69.282 0L0 40" stroke="#ece4d6" stroke-width=".7" fill="none"/>
+      </pattern>
+      <radialGradient id="gridFadeG" cx=".5" cy=".5" r=".62">
+        <stop offset=".6" stop-color="#fff"/><stop offset="1" stop-color="#000"/>
+      </radialGradient>
+      <mask id="gridFade" maskContentUnits="objectBoundingBox"><rect width="1" height="1" fill="url(#gridFadeG)"/></mask>
+    </defs>
+    <rect id="paper" width="1400" height="1400" fill="#faf6ee"/>
+    <rect id="grid" width="1400" height="1400" fill="url(#isoGrid)" mask="url(#gridFade)"/>
+    <g id="art"></g>
+    <g id="fx"></g>
+  </svg>
+</div>
+</main>
+<script>/*KIT*/</script>
+<script>/*SHEETS*/</script>
+<script>/*APP*/</script>
+</body>
+</html>

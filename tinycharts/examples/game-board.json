@@ -1,0 +1,31 @@
+{
+ "title": "A picnic, decided by the weather dice",
+ "checked": "Every reachable state checked (11 states, 17 with their data, 57 steps). All 5 rules hold.",
+ "rules": [
+  {
+   "rule": "Every step can happen, and none is a dead end",
+   "says": "Each of the 11 states is reached from the start, every step can fire, and no state leaves you stuck.",
+   "path": "Holds on every path."
+  },
+  {
+   "rule": "The picnic is on the rug",
+   "says": "The basket opens only on square 9. No roll lets you eat on the way.",
+   "path": "Take away the at the rug guard and it breaks in 1 step: roll a 1."
+  },
+  {
+   "rule": "Nobody eats in the rain",
+   "says": "In the rain, everyone waits in the bandstand. No picnic starts wet.",
+   "path": "Take away the at the rug guard and it breaks in 1 step: roll a 6."
+  },
+  {
+   "rule": "Shelter only in the rain",
+   "says": "You go to the bandstand only when the die shows rain.",
+   "path": "Take away the raining guard and it breaks in 1 step: roll a 1."
+  },
+  {
+   "rule": "Never past the rug",
+   "says": "A roll that would carry you past square 9 leaves you where you are.",
+   "path": "Holds on every path."
+  }
+ ]
+}

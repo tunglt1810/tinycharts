@@ -1,0 +1,21 @@
+{
+ "title": "A loaf of bread, timed",
+ "checked": "Every reachable state checked (9 states, 12 with their data, 13 steps). All 3 rules hold.",
+ "rules": [
+  {
+   "rule": "Every step can happen, and none is a dead end",
+   "says": "Each of the 9 states is reached from the start, every step can fire, and no state leaves you stuck.",
+   "path": "Holds on every path."
+  },
+  {
+   "rule": "The dough doubles before it is shaped",
+   "says": "Nobody shapes a loaf from dough that has not risen.",
+   "path": "Take away the doubled guard and it breaks in 4 steps: next step, next step, next step, next step."
+  },
+  {
+   "rule": "No slice while it is hot",
+   "says": "The bread is cut only after an hour on the rack.",
+   "path": "Take away the cool guard and it breaks in 9 steps: next step, next step, next step, wait, next step, next step, next step, out of the oven, slice it."
+  }
+ ]
+}

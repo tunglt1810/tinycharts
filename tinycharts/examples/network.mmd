@@ -1,0 +1,16 @@
+---
+title: "A snow day: the school's phone chain"
+---
+stateDiagram-v2
+  [*] --> start
+  start: only the head knows
+  calling: the calls go round
+  settled: no one new to call
+  state spread <<choice>>
+  start --> spread: ring round
+  calling --> spread: ring round
+  spread --> settled: [no one new heard]
+  spread --> calling: [else]
+  start --> start: caretaker in or out
+  calling --> calling: caretaker in or out
+  settled --> start: start again

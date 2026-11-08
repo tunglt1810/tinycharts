@@ -1,0 +1,14 @@
+---
+title: "Sorting the fruit bowl"
+---
+stateDiagram-v2
+  [*] --> waiting
+  waiting: a full bowl, none sorted
+  sorting: sorting the fruit
+  sorted: every fruit has its place
+  state next <<choice>>
+  waiting --> next: next fruit
+  sorting --> next: next fruit
+  next --> sorted: [last fruit]
+  next --> sorting: [else]
+  sorted --> waiting: a new bowl

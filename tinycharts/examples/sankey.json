@@ -1,0 +1,26 @@
+{
+ "title": "Where a household's water goes",
+ "checked": "Every reachable state checked (10 states, 160 with their data, 240 steps). All 4 rules hold.",
+ "rules": [
+  {
+   "rule": "Every step can happen, and none is a dead end",
+   "says": "Each of the 10 states is reached from the start, every step can fire, and no state leaves you stuck.",
+   "path": "Holds on every path."
+  },
+  {
+   "rule": "In equals out",
+   "says": "Every litre from the mains and the barrel comes out in the sewer or the soil. None is lost, none is made.",
+   "path": "Holds on every path."
+  },
+  {
+   "rule": "Rain water only for the garden",
+   "says": "The rain barrel is not clean enough to drink or wash in. Its water goes only to the garden.",
+   "path": "Take away the to the shower guard and it breaks in 15 steps: connect the rain barrel, next litre, follow it, down the drain, back to the meter, next litre, follow it, down the drain, back to the meter, next litre, follow it, down the drain, back to the meter, next litre, follow it."
+  },
+  {
+   "rule": "Each litre keeps to its band",
+   "says": "A litre goes to the use whose band it is in, and nowhere else.",
+   "path": "Take away the to the toilet guard and it breaks in 2 steps: next litre, follow it."
+  }
+ ]
+}

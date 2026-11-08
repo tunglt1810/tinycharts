@@ -1,0 +1,27 @@
+---
+title: "Bean seeds sown to beans picked"
+---
+stateDiagram-v2
+  [*] --> packet
+  packet: in the packet
+  sown: sown
+  sprouted: sprouted
+  planted: planted out
+  flowered: flowered
+  podded: in pod
+  harvest: picked
+  bare: nothing left to pick
+  state pick <<choice>>
+  packet --> sown: next stage
+  sown --> sprouted: next stage
+  sprouted --> planted: next stage
+  planted --> flowered: next stage
+  flowered --> podded: next stage
+  planted --> planted: slugs in the night [plants in the bed]
+  flowered --> flowered: slugs in the night [plants in the bed]
+  podded --> podded: slugs in the night [plants in the bed]
+  podded --> pick: next stage
+  pick --> harvest: [some plants left]
+  pick --> bare: [else]
+  harvest --> packet: sow again
+  bare --> packet: sow again

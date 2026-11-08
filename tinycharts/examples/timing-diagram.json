@@ -1,0 +1,21 @@
+{
+ "title": "Train coming",
+ "checked": "Every reachable state checked (7 states, 15 with their data, 17 steps). All 3 rules hold.",
+ "rules": [
+  {
+   "rule": "Every step can happen, and none is a dead end",
+   "says": "Each of the 7 states is reached from the start, every step can fire, and no state leaves you stuck.",
+   "path": "Holds on every path."
+  },
+  {
+   "rule": "The barrier is never up with a train on the crossing",
+   "says": "While a train is on the crossing, or another is still due, the barrier stays down.",
+   "path": "Take away the crossing clear guard and it breaks in 8 steps: train detected, wait 6 s, lower barrier, barrier down, another train, train arrives, train leaves, raise barrier."
+  },
+  {
+   "rule": "The lights flash before the barrier moves",
+   "says": "The barrier starts down only after the lights have flashed for six seconds.",
+   "path": "Take away the lights flashed guard and it breaks in 2 steps: train detected, lower barrier."
+  }
+ ]
+}

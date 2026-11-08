@@ -1,0 +1,20 @@
+---
+title: "A shelf of jam jars"
+---
+stateDiagram-v2
+  [*] --> sealed
+  sealed: on the shelf, sealed
+  open: open, in use
+  finished: eaten up
+  mouldy: gone off
+  state spoon <<choice>>
+  state week <<choice>>
+  sealed --> open: open it
+  open --> spoon: a spoonful
+  spoon --> finished: [last spoon]
+  spoon --> open: [else]
+  open --> week: a week later
+  week --> mouldy: [past its weeks]
+  week --> open: [else]
+  finished --> sealed: a new jar
+  mouldy --> sealed: a new jar

@@ -1,0 +1,24 @@
+---
+title: "A layer cake"
+---
+stateDiagram-v2
+  [*] --> board
+  board: the cake board
+  base: the bottom sponge
+  jam: raspberry jam
+  middle: the middle sponge
+  cream: whipped cream
+  top: the top sponge
+  iced: the icing
+  board --> base: add a layer
+  base --> base: wait to set [still soft]
+  base --> jam: add a layer [layer below is set]
+  jam --> jam: wait to set [still soft]
+  jam --> middle: add a layer [layer below is set]
+  middle --> middle: wait to set [still soft]
+  middle --> cream: add a layer [layer below is set]
+  cream --> cream: wait to set [still soft]
+  cream --> top: add a layer [layer below is set]
+  top --> top: wait to set [still soft]
+  top --> iced: ice it [top is set]
+  iced --> board: start again

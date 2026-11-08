@@ -1,0 +1,21 @@
+---
+title: "Out of the door by eight"
+---
+stateDiagram-v2
+  [*] --> alarm
+  alarm: 7:00 the alarm
+  mia_wash: 7:05 Mia in the bathroom
+  leo_wash: 7:15 Leo in the bathroom
+  sam_wash: 7:25 Sam in the bathroom
+  breakfast: 7:35 breakfast
+  shoes: 7:50 shoes and coats
+  out: 8:00 out of the door
+  alarm --> mia_wash: Mia gets up
+  mia_wash --> leo_wash: Leo's turn
+  leo_wash --> sam_wash: Sam's turn
+  sam_wash --> breakfast: to the table
+  breakfast --> shoes: shoes on
+  alarm --> alarm: snooze [not snoozed]
+  shoes --> out: leave [all ready]
+  shoes --> shoes: wait for Sam [else]
+  out --> [*]

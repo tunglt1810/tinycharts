@@ -1,0 +1,37 @@
+---
+title: "A picnic, decided by the weather dice"
+---
+stateDiagram-v2
+  [*] --> walk
+  state walk {
+    [*] --> home
+    home: 1 · home
+    gate: 2 · the garden gate
+    lane: 3 · the lane
+    bridge: 4 · the bridge
+    pond: 5 · the duck pond
+    meadow: 6 · the meadow
+    oak: 7 · the big oak
+    hill: 8 · the kite hill
+  }
+  picnic: 9 · the picnic rug
+  shelter: the bandstand
+  state die <<choice>>
+  walk --> die: roll a 1
+  walk --> die: roll a 2
+  walk --> die: roll a 3
+  walk --> die: roll a 4
+  walk --> die: roll a 5
+  walk --> die: roll a 6
+  shelter --> die: the rain stops
+  die --> shelter: [raining]
+  die --> picnic: [at the rug]
+  die --> home: [at 1]
+  die --> gate: [at 2]
+  die --> lane: [at 3]
+  die --> bridge: [at 4]
+  die --> pond: [at 5]
+  die --> meadow: [at 6]
+  die --> oak: [at 7]
+  die --> hill: [at 8]
+  picnic --> walk: home again
