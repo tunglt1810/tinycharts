@@ -21,7 +21,7 @@ export const result = check({
     { rule: 'Every seed is counted', says: `The plants still growing and the ones on the compost always add up to the ${SEEDS} seeds in the packet.`, holds: s => s.n + s.lost === SEEDS && s.n >= 0 },
     { rule: 'No picking from a bare bed', says: 'The basket fills only when at least one plant is left.', holds: s => s.at !== 'harvest' || s.n > 0 },
   ],
-  mutants: { 'some plants left': true },
+  mutants: { 'some plants left': true, 'plants in the bed': true },
 });
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) writeResult(HERE + 'funnel.json', result);

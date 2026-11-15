@@ -27,7 +27,7 @@ export const result = check({
     { rule: 'The barrier is never up with a train on the crossing', says: 'While a train is on the crossing, or another is still due, the barrier stays down.', holds: s => (!s.on || s.bar === 'down') && (s.bar !== 'raising' || s.due === 0) },
     { rule: 'The lights flash before the barrier moves', says: 'The barrier starts down only after the lights have flashed for six seconds.', holds: s => s.bar === 'up' || s.flashed },
   ],
-  mutants: { 'crossing clear': true, 'lights flashed': true },
+  mutants: { 'crossing clear': true, 'lights flashed': true, 'not flashed': true, 'no second train yet': true, 'train due': true },
 });
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) writeResult(HERE + 'timing-diagram.json', result);

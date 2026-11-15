@@ -33,7 +33,7 @@ export const result = check({
     { rule: 'No order without stock held', says: 'Redis holds a unit for every order, so nobody sells the same box twice.', holds: s => !ORDER.includes(s.at) || s.held },
     { rule: 'A guest order meets a person first', says: 'A guest checkout has a high fraud score, so a person looks at it before the order.', holds: s => !ORDER.includes(s.at) || !s.guest || s.reviewed },
   ],
-  mutants: { 'valid address': true, 'card accepted': true, '3DS passed': true, 'low risk': true, 'in stock': true },
+  mutants: { 'valid address': true, 'card accepted': true, '3DS passed': true, 'low risk': true, 'in stock': true, 'tries left': true },
 });
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) writeResult(HERE + 'flowchart-tech.json', result);

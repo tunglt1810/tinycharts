@@ -20,7 +20,7 @@ export const result = check({
     { rule: 'Each layer goes on a set layer', says: 'A sponge is cold, and jam or cream has set, before the next layer goes on it.', holds: s => !s.slid },
     { rule: 'The icing goes on last', says: 'The icing goes on only when all five layers are on the board and the top one is cold.', holds: s => !s.iced || (s.on === 5 && !s.runny) },
   ],
-  mutants: { 'layer below is set': true, 'top is set': true },
+  mutants: { 'layer below is set': true, 'top is set': true, 'still soft': true },
 });
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) writeResult(HERE + 'exploded-view.json', result);

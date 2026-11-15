@@ -20,7 +20,7 @@ Several things happen at the same time, share something (one bathroom, one oven,
 
 ## The statechart it suits
 
-One state for each moment where something changes, in time order. A guard on the shared thing (`[bathroom free]`) and a guard on the meeting (`[all ready]`). The rules: the shared thing is never used twice at once, and nobody finishes without the others.
+One state for each moment where something changes, in time order. The order of the states keeps the shared thing free: one turn ends before the next starts. A press that would break the order is refused in the sheet. A guard on the meeting (`[all ready]`). The rules: the shared thing is never used twice at once, and nobody finishes without the others.
 
 ## Buttons
 

@@ -22,7 +22,7 @@ export const result = check({
     { rule: 'No fire without a watcher', says: 'The fire never burns while nobody is awake at camp.', holds: s => !(s.fire && s.away) },
     { rule: 'No food out at night', says: 'From lights out, and when the bear comes, every bit of food is in the bear box.', holds: s => !['night', 'bear'].includes(s.at) || !s.food },
   ],
-  mutants: { 'fire out': true, 'food stowed': true },
+  mutants: { 'fire out': true, 'food stowed': true, 'fire burns': true, 'food out': true },
 });
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) writeResult(HERE + 'annotated-scene.json', result);

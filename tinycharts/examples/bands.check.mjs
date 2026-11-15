@@ -29,7 +29,7 @@ export const result = check({
     { rule: 'Never two hours in a red band', says: 'Under 10 °C or over 30 °C, the heater or the vent is working by the second hour.', holds: s => s.red < 2 },
     { rule: 'The heater and the vent are never on together', says: 'Heat is never let straight out of an open vent.', holds: s => !(s.heater && s.vent) },
   ],
-  mutants: { 'first hour': true, 'vent is shut': true, 'heater is off': true },
+  mutants: { 'first hour': true, 'vent is shut': true, 'heater is off': true, 'vent is open': true, 'heater is on': true },
 });
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) writeResult(HERE + 'bands.json', result);

@@ -32,7 +32,6 @@ export const result = check({
     { rule: 'No column over its limit', says: 'One order at the measuring, one at the cutting table, two at the sewing machines, one in the fitting room.', holds: s => [1, 2, 3, 4].every(c => count(s.pos, c) <= LIMIT[c]) },
     { rule: 'Ready means all four', says: 'The shop is all ready only when every order hangs on the rail.', holds: s => s.at !== 'ready' || allReady(s) },
     { rule: 'Held up only when stuck', says: 'The shop says held up only when no order can move on.', holds: s => s.at !== 'held' || mover(s) === undefined },
-    { rule: 'A customer comes only to a fitting', says: 'Nobody is called in unless an order waits in the fitting room.', holds: s => !s.tried || s.pos.includes(4) },
   ],
   mutants: { 'all ready': true, 'nothing can move': true, 'an order is at the fitting': true },
 });

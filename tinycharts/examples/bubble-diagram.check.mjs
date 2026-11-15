@@ -29,7 +29,7 @@ export const result = check({
     { rule: 'Never more guests than seats', says: 'The seating has 20 seats. A group of four comes in only when four seats are free.', holds: s => s.guests <= SEATS },
     { rule: 'The report comes after the kitchen', says: 'The inspector writes the report only after she has seen the kitchen.', holds: s => s.at !== 'report' || s.kitchen },
   ],
-  mutants: { 'hairnet on': true, '4 seats free': true, 'kitchen seen': true },
+  mutants: { 'hairnet on': true, '4 seats free': true, 'kitchen seen': true, 'toilet still to see': true, 'kitchen still to see': true, 'no hairnet': true },
 });
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) writeResult(HERE + 'bubble-diagram.json', result);
