@@ -1,6 +1,6 @@
 // One command from sheet to checked page: run each sheet's rule check, build
 // the page with its logic panel, then audit every state in headless Chrome.
-// bun tinycharts/build/make.mjs a.js [b.js ...] -o out.html [--png dir]
+// bun tinycharts/build/make.mjs a.js [b.js ...] -o out.html [--png dir] [--theme theme.json]
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -12,13 +12,13 @@ import { parseMmd } from './mmd.mjs';
 import { exportSheet } from './export.mjs';
 
 function parse(args) {
-  const { values: v, positionals: files } = parseArgs({ args, allowPositionals: true, options: { o: { type: 'string', short: 'o' }, png: { type: 'string' } } });
-  if (!files.length || !v.o) throw new Error('Usage: make.mjs a.js [b.js ...] -o out.html [--png dir]');
-  return { files, out: v.o, png: v.png || null };
+  const { values: v, positionals: files } = parseArgs({ args, allowPositionals: true, options: { o: { type: 'string', short: 'o' }, png: { type: 'string' }, theme: { type: 'string' } } });
+  if (!files.length || !v.o) throw new Error('Usage: make.mjs a.js [b.js ...] -o out.html [--png dir] [--theme theme.json]');
+  return { files, out: v.o, png: v.png || null, theme: v.theme || null };
 }
 
 // The problems with each sheet, as lines to print; none means the page is good.
-export async function make({ files, out, png = null }) {
+export async function make({ files, out, png = null, theme = null }) {
   const lines = [];
   for (const f of files) {
     const base = f.replace(/\.js$/, ''), key = path.basename(base);
@@ -28,7 +28,7 @@ export async function make({ files, out, png = null }) {
     if (!/All \d+ rules hold\./.test(res.checked)) for (const x of res.rules.filter(x => /^Breaks/.test(x.path))) lines.push(`${key}: rule "${x.rule}": ${x.path}`);
   }
   if (lines.length) return lines;
-  await build({ files, out, logic: true });
+  await build({ files, out, logic: true, theme });
   const url = pathToFileURL(path.resolve(out)).href;
   for (const f of files) {
     const base = f.replace(/\.js$/, ''), key = path.basename(base);

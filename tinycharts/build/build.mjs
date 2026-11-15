@@ -1,11 +1,11 @@
 // Build sheets into one self-contained HTML page.
-// bun tinycharts/build/build.mjs a.js [b.js ...] -o out.html [--logic] [--gallery gallery.json] [--icons dir]
+// bun tinycharts/build/build.mjs a.js [b.js ...] -o out.html [--logic] [--gallery gallery.json] [--icons dir] [--theme theme.json]
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
 import { fileURLToPath } from 'node:url';
 import { loadTech, find } from './tech.mjs';
-import { sanitizeSvg, recolor, toLogo, PALETTE } from './logo-lib.mjs';
+import { sanitizeSvg, recolor, toLogo, PALETTE, PAL } from './logo-lib.mjs';
 import { TYPES } from './types.mjs';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -22,10 +22,10 @@ export const fontFace = f => `@font-face{font-family:"${f.fam}";font-weight:${f.
 
 function parse(args) {
   const { values: v, positionals: files } = parseArgs({ args, allowPositionals: true, options: {
-    o: { type: 'string', short: 'o' }, logic: { type: 'boolean' }, gallery: { type: 'string' }, icons: { type: 'string' },
+    o: { type: 'string', short: 'o' }, logic: { type: 'boolean' }, gallery: { type: 'string' }, icons: { type: 'string' }, theme: { type: 'string' },
   } });
-  if (!files.length || !v.o) throw new Error('Usage: build.mjs a.js [b.js ...] -o out.html [--logic] [--gallery gallery.json] [--icons dir]');
-  return { files, out: v.o, logic: !!v.logic, gallery: v.gallery || null, icons: v.icons };
+  if (!files.length || !v.o) throw new Error('Usage: build.mjs a.js [b.js ...] -o out.html [--logic] [--gallery gallery.json] [--icons dir] [--theme theme.json]');
+  return { files, out: v.o, logic: !!v.logic, gallery: v.gallery || null, icons: v.icons, theme: v.theme || null };
 }
 
 const read = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
@@ -81,7 +81,20 @@ function iconsOf(sources, dir = path.join(ROOT, 'icons', 'logos')) {
   return `const TECH = ${JSON.stringify(table)};\nconst LOGOS = ${JSON.stringify(logos)};\n`;
 }
 
-export async function build({ files, out, logic = false, gallery = null, icons }) {
+// A theme names PAL colours. The kit, the shell CSS, the logos and the sheets
+// all write these colours as hex, so the swap is on the hex of the whole page.
+// One pass, so that a new colour is never swapped again.
+export function themeOf(file) {
+  const theme = JSON.parse(fs.readFileSync(file, 'utf8')), name = path.basename(file), swap = {};
+  for (const [k, v] of Object.entries(theme)) {
+    if (!(k in PAL)) throw new Error(`${name}: "${k}" is not a PAL colour. Use one of: ${Object.keys(PAL).join(' ')}`);
+    if (!/^#[0-9a-f]{6}$/i.test(v)) throw new Error(`${name}: "${k}" must be a colour like #b5483b, not "${v}"`);
+    swap[PAL[k].toLowerCase()] = v.toLowerCase();
+  }
+  return html => html.replace(/#[0-9a-f]{6}(?![0-9a-f])/gi, c => swap[c.toLowerCase()] ?? c);
+}
+
+export async function build({ files, out, logic = false, gallery = null, icons, theme = null }) {
   const fonts = FONTS.map(fontFace).join('');
   const keys = files.map(f => path.basename(f, '.js'));
   const sheets = files.map((f, i) => `SHEETS[${JSON.stringify(keys[i])}] = (() => {\n${fs.readFileSync(f, 'utf8')}\n;return {draw, init, size: typeof SIZE === 'undefined' ? [1400, 1400] : SIZE, about: typeof ABOUT === 'undefined' ? '' : ABOUT};\n})();`).join('\n');
@@ -95,7 +108,7 @@ export async function build({ files, out, logic = false, gallery = null, icons }
     .replace('/*APP*/', () => script((logic ? read('shell/logic.js') + '\n' : '') + read('shell/app.js')))
     .replace('<!--TITLE-->', () => meta[0].name);
   fs.mkdirSync(path.dirname(path.resolve(out)), { recursive: true });
-  fs.writeFileSync(out, html);
+  fs.writeFileSync(out, theme ? themeOf(theme)(html) : html);
   return out;
 }
 

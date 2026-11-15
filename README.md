@@ -96,7 +96,12 @@ Link the skill folder into your skills folder:
 ln -s "$PWD/tinycharts" ~/.claude/skills/tinycharts
 ```
 
-Then ask Claude Code for a diagram, for example "show how a pull request gets merged, as a tinycharts sheet".
+Then ask Claude Code for a diagram. Some prompts:
+
+- A new subject: "Show how a pull request gets merged, as a tinycharts sheet."
+- A type you choose: "Make a tinycharts kanban of our hiring pipeline: applied, screen, interview, offer, hired."
+- One example with your content: "Copy `examples/kanban.js` for our support tickets. Keep its layout. Change the columns to new, triage, fix, verify, closed."
+- Your colours: "Make the hiring kanban with the `sea` theme." Or: "Make a theme with our colours: ink #1d2b53, red #e4572e, paper #fbfaf7. Then build the sheet with it."
 
 ## Commands
 
@@ -105,6 +110,7 @@ Then ask Claude Code for a diagram, for example "show how a pull request gets me
 | See all 28 example sheets on one page | `bun scripts/gallery.mjs -o .tmp/all.html` |
 | Start a new sheet from the template of a type | `bun tinycharts/build/new.mjs <type> <dir>/<name>` |
 | Check a sheet, build its page and audit every state | `bun tinycharts/build/make.mjs <dir>/<name>.js -o <dir>/<name>.html [--png <dir>/png]` |
+| Build with other colours (see `tinycharts/themes/`) | add `--theme <theme>.json` to `make.mjs` or `build.mjs` |
 | Build a page only, with no checks | `bun tinycharts/build/build.mjs <a>.js [<b>.js ...] -o <page>.html [--logic]` |
 | Export SVG and PNG files | `bun tinycharts/build/export.mjs <page>.html [--state <id> \| --story] [--svg] [--png] -o <dir>` |
 | Record Play all as a GIF | `bun tinycharts/build/gif.mjs <page>.html [--width 560] [--fps 10] -o <name>.gif` |

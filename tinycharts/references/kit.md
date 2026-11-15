@@ -1,12 +1,12 @@
 # The kit
 
-The kit is plain script files that share one scope. The build loads them in this order: `core`, `pen`, `marker`, `solids`, `life`, `text`, `marks`, `logo`, `objects`, `motion`. A sheet calls the functions below by name.
+The kit is plain script files that share one scope. The build loads them in this order: `core`, `pen`, `marker`, `solids`, `life`, `text`, `marks`, `logo`, `objects`, `motion`. A sheet calls the functions below by name. To see the main parts drawn, with their names, build `examples/kit-catalogue.js`.
 
 **Points.**
 - A *world point* is `[x, y, z]`. x runs down and to the right, y runs down and to the left, z runs up.
 - A *sheet point* is `[sx, sy]` in pixels. `P(x, y, z)` turns a world point into a sheet point. `OX` and `OY` set where the world origin falls on the sheet.
 
-**Colours.** `PAL` holds the marker palette: `cream sand tan wood bark sage leaf mint sky blue navy lilac rose brick mustard butter stone grey`, plus `paper` and `red`. Keep `red` for the current state. `INK` is the line colour.
+**Colours.** `PAL` holds the marker palette: `cream sand tan wood bark sage leaf mint sky blue navy lilac rose brick mustard butter stone grey slate shade`, plus `paper`, `red` and `ink`. Keep `red` for the current state. `INK` is the line colour. A theme changes these colours for one page (`references/sheet.md`, Themes).
 
 ## core
 

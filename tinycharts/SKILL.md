@@ -106,6 +106,10 @@ To hand the sheet over:
 - `bun <skill>/build/export.mjs <page>.html --story --png -o <dir>` writes a storyboard. Add `--svg` for SVG files.
 - `bun <skill>/build/gif.mjs <page>.html -o <name>.gif` records Play all as a GIF. It needs `ffmpeg`.
 
+### 9. Other colours, if the person asks
+
+Do not change the colours in the kit or in the sheet. Write a theme, and add `--theme <theme>.json` to make. `references/sheet.md` (Themes) gives the format. `<skill>/themes/` has a sample theme.
+
 ## Rules
 
 - **All lettering on the sheet is English.**
