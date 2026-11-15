@@ -147,11 +147,11 @@ What this means for the builder:
   - The SVG file has no paper background. The PNG file keeps the paper colour.
   - The skill keeps a file that exists, unless `--force` is given.
 
-### 6.7 Changes the owner asked for at stop 2
+### 6.7 Logos, messages and the panel
 
 - Logos must stand out: a light plate, a larger logo, a larger icon.
 - A logo on a cylinder must tilt and bend with the cylinder, as a logo on a flat face does.
-- The demo page has the `message` object. The envelope follows the arrows, through each object, and does not jump straight to the end.
+- The `icon-board` sheet has the `message` object. The envelope follows the arrows, through each object, and does not jump straight to the end.
 - The sheet panel has zoom buttons.
 
 ## 7. The 28 chart types
@@ -261,7 +261,7 @@ Plan 1 built the kit with the decisions below. Later plans use these decisions.
 - `build/`: `build.mjs`, `chrome.mjs`, `mmd.mjs`, `check-lib.mjs`, `export.mjs`, `logo-lib.mjs`, `logos.mjs`, `tech.mjs`, `icon.mjs`, `new.mjs`, `make.mjs`, `types.mjs`, `gif.mjs`.
 - `icons/`: `tech.json` and `logos/`.
 - `fonts/`: the woff2 fonts and the OFL file of each font.
-- `examples/`: `kit-demo`, `flow-demo`, `kit-catalogue`, `icon-board`, the 28 example sheets and `flowchart-tech`. Each sheet has `.js`, `.mmd`, `.check.mjs` and `.json`.
+- `examples/`: the 28 example sheets, `flowchart-tech`, and the showcases `kit-catalogue` and `icon-board`. Each sheet has `.js`, `.mmd` and `.check.mjs`. The check writes `.json`. Git ignores it.
 
 **Sheet contract.** A sheet file declares:
 

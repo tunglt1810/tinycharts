@@ -65,12 +65,12 @@ function unit(i) {
 }
 
 function theBook(lp) {
-  const at = LENT ? null : BK;
-  if (!at) return;
-  const f = face(at.x, at.x + at.w, at.y, at.z, at.z + at.h);
+  const bookAt = LENT ? null : BK;
+  if (!bookAt) return;
+  const f = face(bookAt.x, bookAt.x + bookAt.w, bookAt.y, bookAt.z, bookAt.z + bookAt.h);
   group(lp ? '' : 'id="book" class="box" data-lvl="3"', () => {
     poly(f, '#2f4f86', 0.6);
-    rule([[P(at.x, at.y, at.z + 4), P(at.x + at.w, at.y, at.z + 4)], [P(at.x, at.y, at.z + 15), P(at.x + at.w, at.y, at.z + 15)]], '#e3c77a', 1);
+    rule([[P(bookAt.x, bookAt.y, bookAt.z + 4), P(bookAt.x + bookAt.w, bookAt.y, bookAt.z + 4)], [P(bookAt.x, bookAt.y, bookAt.z + 15), P(bookAt.x + bookAt.w, bookAt.y, bookAt.z + 15)]], '#e3c77a', 1);
   });
 }
 

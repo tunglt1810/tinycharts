@@ -1,4 +1,6 @@
 // The 28 chart types (spec 7.1): slug, name, gallery group, the question.
+import { lev } from './tech.mjs';
+
 const T = (group, slug, name, question) => ({ slug, name, group, question });
 export const TYPES = [
   T('Time', 'timeline', 'Timeline', 'how long each step takes, to scale'),
@@ -31,17 +33,10 @@ export const TYPES = [
   T('Compare', 'quadrant', 'Quadrant', 'where each one falls on two measures'),
 ];
 
-const norm = s => String(s).trim().toLowerCase().replace(/[\s_]+/g, '-');
-function lev(a, b) {
-  let prev = Array.from({ length: b.length + 1 }, (_, j) => j);
-  for (let i = 1; i <= a.length; i++) {
-    const cur = [i];
-    for (let j = 1; j <= b.length; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
-    prev = cur;
-  }
-  return prev[b.length];
-}
+// The gallery page lists every type, in this order, under its group.
+export const GALLERY = TYPES.map(t => ({ group: t.group, key: t.slug, type: t.name, question: t.question }));
 
+const norm = s => String(s).trim().toLowerCase().replace(/[\s_]+/g, '-');
 export function typeOf(name) {
   const n = norm(name), t = TYPES.find(t => t.slug === n || norm(t.name) === n);
   if (t) return t;

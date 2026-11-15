@@ -11,13 +11,13 @@ const KEEP = new Set(['svg', 'g', 'path', 'rect', 'circle', 'ellipse', 'polygon'
   'linearGradient', 'radialGradient', 'stop', 'clipPath', 'mask', 'use', 'title']);
 
 // The palette is read from the kit itself, so there is one list of colours.
-// Paper is the background and red marks the current state, so logos use neither.
-export const PALETTE = (() => {
+export const PAL = (() => {
   const ctx = vm.createContext({});
   vm.runInContext(fs.readFileSync(path.join(ROOT, 'kit', 'core.js'), 'utf8') + ';this.PAL = PAL;', ctx);
-  const { paper, red, ...rest } = ctx.PAL;
-  return rest;
+  return { ...ctx.PAL };
 })();
+// Paper is the background and red marks the current state, so logos use neither.
+export const PALETTE = (({ paper, red, ...rest }) => rest)(PAL);
 
 const localUrl = v => !/url\(/i.test(v) || [...v.matchAll(/url\(\s*['"]?([^)'"]*)/gi)].every(m => m[1].startsWith('#'));
 

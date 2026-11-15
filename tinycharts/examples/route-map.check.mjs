@@ -22,7 +22,7 @@ export const result = check({
     { rule: 'Never in the pond', says: 'Past the ducks the dog is on the lead, so it never jumps in the pond.', holds: s => s.at !== 'pond' || s.lead },
     { rule: 'The walk ends at the gate', says: 'The dog goes home only from the gate, after the whole loop.', holds: s => s.at !== 'home' || s.back },
   ],
-  mutants: { 'on the lead': true, 'back at the gate': true },
+  mutants: { 'on the lead': true, 'back at the gate': true, 'off the lead': true },
 });
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) writeResult(HERE + 'route-map.json', result);

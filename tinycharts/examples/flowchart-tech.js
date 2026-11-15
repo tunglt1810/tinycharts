@@ -1,7 +1,7 @@
 // A web shop checkout, as a flowchart: the steps run down the middle, the ways
 // it fails sit beside them, and each service stands on its own board.
 const SIZE = [2620, 1620];
-const ABOUT = 'every step, and where it splits or goes back';
+const ABOUT = 'every step, and where it splits';
 const NAMES = {
   cart: 'cart', identified: 'signed in or guest', address: 'shipping address', address_bad: 'address rejected',
   method: 'shipping method', paying: 'card payment', declined: 'card declined', challenge: '3-D Secure',
@@ -111,6 +111,8 @@ function boards() {
     devbox(30, -30, 0);
     const cc = [P(-10, 40, 0), P(30, 40, 0), P(30, 64, 0), P(-10, 64, 0)];
     shape(cc, ['declined', 'sca_failed'].includes(AT) ? PAL.rose : PAL.sky, { w: 1 });
+    // a person reviews the order: no fixed time, so the sand runs only then
+    hourglass(92, -48, 0, { left: AT === 'review' ? 0.6 : 1 });
     who(60, 40, { shirt: PAL.slate, pants: INK, hair: 'short', arm: AT === 'review' ? 'up' : 'hold', look: -1, say: 'A guest, a new card, a far address: I look first.' });
   });
   card('redis', () => {
@@ -276,7 +278,7 @@ function init(ctx) {
   const redraw = () => { draw(5); ctx.state(AT); };
   const settle = (to, round) => { ROUND = round; V = { ...V, ...dataOf(to, round) }; if (to === 'cart') V.tries = 0; };
   const go = (to, round = ROUND, tries = V.tries) => {
-    const from = AT, pts = [tok(from), tok(to)], env = route(SVC[from], SVC[to]);
+    const from = AT, pts = [tok(from), tok(to)], env = envPath(SVC[from], SVC[to]);
     ctx.say(SAY[to] || NAMES[to] + '.');
     hops(ctx, $('token'), pts.map(p => at(...p)), { then: () => {
       if (to === 'cart') V.trail = [];

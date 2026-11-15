@@ -31,7 +31,7 @@ A chain of 7–10 simple states. One choice with guards, or two events from one 
 
 ## Kit
 
-`tag`, `route`, `arrow`, `dash`, `board`, `who`, `hops` (the token), `ctx.follow`. Doodles from `box`, `turn`, `cyl`, `pipe`, `shape`.
+`tag`, `flowArrow` (`dashed` for a way back), `board`, `who`, `hops` (the token), `ctx.follow`. Doodles from `box`, `turn`, `cyl`, `pipe`, `shape`.
 
 ## Density
 
@@ -44,6 +44,7 @@ From the original (Free edition): 9 states, 6 doodle stations, 7 people, 8 route
 - The sheet is 2620 × 1620. The steps run down the middle as tags. The ways each step fails sit to the right of it, with the guard words beside them.
 - Each service stands on its own board, four on each side, drawn with `tech()` so that its logo shows. A dotted link joins each step to the board of the service that does it. A pill on the board gives the service's own state.
 - A `message` envelope hops from board to board along the links as the token walks the steps. The camera follows.
+- A step with no fixed time gets an `hourglass` on the board of its service, for example a person who reviews an order. The sand runs while the flow is in that step.
 - A group state holds the steps that a cancel can stop.
 - Four buttons: `next step`, the choice at the start, `it fails here` (the failure that fits the current step), and `cancel order`.
 

@@ -2,9 +2,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
+import { KIT_ORDER } from '../tinycharts/build/build.mjs';
 
 const KIT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'tinycharts', 'kit');
-export const KIT_ORDER = ['core', 'pen', 'marker', 'solids', 'life', 'text', 'marks', 'logo', 'objects', 'motion'];
 
 // Runs the kit the way the page does (plain scripts sharing one scope) and
 // exposes that scope through a proxy, so tests can read and set top-level

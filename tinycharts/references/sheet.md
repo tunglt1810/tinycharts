@@ -63,13 +63,25 @@ bun <skill>/build/make.mjs <dir>/<name>.js -o <dir>/<name>.html [--png <dir>]
 
 1. Make runs the check. A broken rule stops it.
 2. Make builds one page with the logic panel.
-3. Make opens every state in headless Chrome and audits it. It finds text off the sheet, text on top of other text, and states with no mark.
+3. Make opens every state in headless Chrome and audits it. It finds text off the sheet, text on top of other text, and states with no mark. Then it plays the story with Play all. An error in a move gives the line `<sheet>: error: <message>`. Make does not press the event buttons. Press each button yourself.
 4. Make prints each problem as `<sheet>: <state>: <problem>`, and exits 1. It prints `ok` when the page is clean.
 5. With `--png`, it also writes one PNG for each state of the story.
 
 Fix every line before you hand the sheet over. Then look at the PNGs, because the audit only finds text on text. It does not find text that runs past its card or board, a line through text, or text on top of a picture.
 
 The PNGs open each state by its id. A state that the story visits many times with different data gives the same picture each time.
+
+## Themes
+
+A theme is a JSON file that gives new colours to `PAL` names: `{ "ink": "#22303a", "red": "#cf4457", "paper": "#f5f7f6" }`. Make and build take it with `--theme <file>`. A name that is not in `PAL` stops the build.
+
+- The build changes the colour of a name everywhere on the page: in the kit, the page style, the logos and the sheet. A name that the theme does not give keeps its colour.
+- A sheet that writes its own hex for a colour that is not in `PAL` keeps that colour. Make sure that it still looks right with the theme.
+- A theme changes colours only. The fonts, the hand-drawn lines and the isometric view stay.
+- Keep `paper` light and `ink` dark. The kit draws its highlights and its cards with light colours that are not in `PAL`.
+- Keep `red` clear of the other colours, because it marks the current state.
+
+`<skill>/themes/sea.json` is a sample. Look at the PNGs after a make with a theme.
 
 ## Pictures
 

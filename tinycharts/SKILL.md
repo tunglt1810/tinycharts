@@ -37,7 +37,7 @@ Pick the row whose question matches what the reader wants to know. Say why in on
 | Zoom | where it is, from the big picture down | `examples/zoom.js` | `references/zoom.md` |
 | Route map | where it went, stop by stop | `examples/route-map.js` | `references/route-map.md` |
 | Bubble diagram | which spaces connect, and how big | `examples/bubble-diagram.js` | `references/bubble-diagram.md` |
-| Flowchart | every step, and where it splits or goes back | `examples/flowchart.js` | `references/flowchart.md` |
+| Flowchart | every step, and where it splits | `examples/flowchart.js` | `references/flowchart.md` |
 | Decision tree | every answer, and every outcome in view | `examples/decision-tree.js` | `references/decision-tree.md` |
 | Comic strip | a story, one panel at a time | `examples/comic-strip.js` | `references/comic-strip.md` |
 | Cycle | a loop, and the one way off it | `examples/cycle.js` | `references/cycle.md` |
@@ -98,13 +98,17 @@ Write 2–3 rules in `<name>.check.mjs`. Each rule is a thing that must always h
 bun <skill>/build/make.mjs <dir>/<name>.js -o <dir>/<name>.html --png <dir>/png
 ```
 
-Make runs the check, builds the page, and audits every state. Fix every line it prints. Then look at the PNGs, because the audit only finds text on text. It does not find text past its card, a line through text, or text on a picture.
+Make runs the check, builds the page, audits every state, and plays the story. Fix every line it prints. Make does not press the buttons, so press each one on the page. Then look at the PNGs, because the audit only finds text on text. It does not find text past its card, a line through text, or text on a picture.
 
 To hand the sheet over:
 
 - `<page>.html#state=<id>` opens one state.
 - `bun <skill>/build/export.mjs <page>.html --story --png -o <dir>` writes a storyboard. Add `--svg` for SVG files.
 - `bun <skill>/build/gif.mjs <page>.html -o <name>.gif` records Play all as a GIF. It needs `ffmpeg`.
+
+### 9. Other colours, if the person asks
+
+Do not change the colours in the kit or in the sheet. Write a theme, and add `--theme <theme>.json` to make. `references/sheet.md` (Themes) gives the format. `<skill>/themes/` has a sample theme.
 
 ## Rules
 

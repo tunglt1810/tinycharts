@@ -21,9 +21,9 @@ const fresh = () => ({ flashed: false, due: 0, on: false, extra: false, t2: 0 })
 let AT = 'open', T = 0, V = fresh();
 
 // the plan of one run: when the barrier starts up depends on a second train
-const rise = () => (V.extra ? 38 : 28);
-const barAt = t => { const r = rise(); return t < 8 ? 0 : t < 14 ? (t - 8) / 3 : t < r ? 2 : t < r + 6 ? 2 - (t - r) / 3 : 0; };
-const lightsAt = t => t >= 2 && t < rise() + 6;
+const upAt = () => (V.extra ? 38 : 28);
+const barAt = t => { const r = upAt(); return t < 8 ? 0 : t < 14 ? (t - 8) / 3 : t < r ? 2 : t < r + 6 ? 2 - (t - r) / 3 : 0; };
+const lightsAt = t => t >= 2 && t < upAt() + 6;
 const bellAt = t => t >= 2 && t < 14;
 const trainAt = t => {
   const on = (t >= 20 && t < 26) || (V.extra && t >= 30 && t < 36);
@@ -33,7 +33,7 @@ const trainAt = t => {
 // a car's place along its lane: it pulls up, waits for the barrier, and
 // drives on once the barrier is up again
 const carAt = (t, from, wait, gone) => {
-  const end = Math.min(SPAN, rise() + 8), k = t < 2 ? 0 : t < 6 ? easeInOut((t - 2) / 4) : 1;
+  const end = Math.min(SPAN, upAt() + 8), k = t < 2 ? 0 : t < 6 ? easeInOut((t - 2) / 4) : 1;
   if (t < end - 4) return from + (wait - from) * k;
   return wait + (gone - wait) * easeInOut(Math.min(1, (t - end + 4) / 4));
 };
@@ -111,7 +111,7 @@ function marks() {
 }
 
 function events() {
-  const r = rise();
+  const r = upAt();
   const all = [
     [2, 'train detected', AT === 'warning'], [8, 'lights flashed six seconds', V.flashed], [8, 'barrier starts down', AT === 'lowering'],
     [14, 'barrier down, bell stops', AT === 'down'], [20, 'train on the crossing', AT === 'train'],
@@ -121,10 +121,10 @@ function events() {
     [r, 'barrier starts up', AT === 'raising'], [r + 6, 'barrier up, lights off', AT === 'open'],
   ].map((e, i) => [...e, i]).sort((a, b) => a[0] - b[0] || a[3] - b[3]);
   const seen = all.filter(([t, , here]) => t < T - 1e-6 || (Math.abs(t - T) < 1e-6 && here));
-  const box = [[800, 800], [1328, 800], [1328, 1190], [800, 1190]];
+  const evBox = [[800, 800], [1328, 800], [1328, 1190], [800, 1190]];
   out.push(`<rect x="803" y="803" width="528" height="390" rx="8" fill="#c9bfae"/>`);
   out.push(`<rect x="800" y="800" width="528" height="390" rx="8" fill="#fffdf6"/>`);
-  rim(box, 1.2);
+  rim(evBox, 1.2);
   _text(822, 834, 'EVENTS', { cls: 'cap', size: 15, col: LEAD, extra: 'letter-spacing="1.5"' });
   if (!seen.length) _text(822, 872, 'nothing yet', { size: 17, col: LEAD });
   seen.forEach(([t, s], i) => {
@@ -243,17 +243,8 @@ function init(ctx) {
   const lapse = (t0, t1, then) => {
     if (job) job.finish();
     if (ctx.still || Math.abs(t1 - t0) < 0.01) { then(); return; }
-    const ms = Math.min(4200, 600 + Math.abs(t1 - t0) * 260), t00 = performance.now();
-    let raf = 0;
-    const j = { done: false, finish() { if (j.done) return; j.done = true; cancelAnimationFrame(raf); clearTimeout(safety); job = null; then(); ctx.idle(j); } };
-    const step = now => {
-      if (j.done) return;
-      const k = Math.min(1, Math.max(0, (now - t00) / ms));
-      T = t0 + (t1 - t0) * easeInOut(k); draw(SEED); light();
-      if (k < 1) raf = requestAnimationFrame(step); else j.finish();
-    };
-    const safety = setTimeout(j.finish, ms + 200);
-    job = j; ctx.busy(j); raf = requestAnimationFrame(step);
+    const ms = Math.min(4200, 600 + Math.abs(t1 - t0) * 260);
+    job = tween(ctx, ms, e => { T = t0 + (t1 - t0) * e; draw(SEED); light(); }, then);
   };
   const go = (to, t1, v = V) => { V = v; lapse(T, t1, () => { AT = to; T = t1; redraw(); }); };
   const canon = id => ({ ...fresh(), due: ['warning', 'lowering', 'down'].includes(id) ? 1 : 0, on: id === 'train', flashed: !['open', 'warning'].includes(id) });
@@ -271,8 +262,8 @@ function init(ctx) {
       case 'train': ctx.say(SAY.clear + (V.due ? ' Another train is due.' : '')); return go('clear', T + 6, { ...V, on: false });
       case 'clear':
         if (V.due) { ctx.say('The second train comes through. The barrier stays down.'); return go('train', 30, { ...V, due: V.due - 1, on: true }); }
-        ctx.say(SAY.raising); return go('raising', rise() + 3);
-      default: ctx.say(SAY.open); return go('open', Math.min(SPAN, rise() + 8), { ...V, flashed: false });
+        ctx.say(SAY.raising); return go('raising', upAt() + 3);
+      default: ctx.say(SAY.open); return go('open', Math.min(SPAN, upAt() + 8), { ...V, flashed: false });
     }
   });
   ctx.button('another train', () => {
@@ -289,7 +280,7 @@ function init(ctx) {
   });
   ctx.button('raise barrier', () => {
     if (AT === 'clear' && V.due) return ctx.no('A second train is due. The barrier stays down.');
-    if (AT === 'clear') { ctx.say(SAY.raising); return go('raising', rise() + 3); }
+    if (AT === 'clear') { ctx.say(SAY.raising); return go('raising', upAt() + 3); }
     if (AT === 'train') return ctx.no('A train is on the crossing.');
     if (AT === 'lowering' || AT === 'down') return ctx.no('The train has not passed yet.');
     return ctx.no('The barrier is up, or going up, already.');
@@ -301,7 +292,7 @@ function init(ctx) {
     goto(id, play) {
       ctx.say(SAY[id]);
       // the run ends where it started: road open, after the barrier is up
-      if (play && id === 'open' && AT === 'raising') return go('open', Math.min(SPAN, rise() + 8), { ...V, flashed: false });
+      if (play && id === 'open' && AT === 'raising') return go('open', Math.min(SPAN, upAt() + 8), { ...V, flashed: false });
       const v = canon(id), t = CANON[id];
       if (play && t > T && id !== AT) return go(id, t, v);
       V = v; AT = id; T = t; redraw();

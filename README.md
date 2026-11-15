@@ -35,7 +35,7 @@ Each GIF is a recording of Play all on the example sheet of one type. Open a she
 </tr>
 <tr>
 <td width="50%" valign="top"><a href="docs/gifs/bubble-diagram.gif"><img src="docs/gifs/bubble-diagram.gif" alt="Bubble diagram: which spaces connect, and how big" width="100%"></a><br><b>Bubble diagram</b>: which spaces connect, and how big<br><a href="tinycharts/examples/bubble-diagram.js"><code>examples/bubble-diagram.js</code></a></td>
-<td width="50%" valign="top"><a href="docs/gifs/flowchart.gif"><img src="docs/gifs/flowchart.gif" alt="Flowchart: every step, and where it splits or goes back" width="100%"></a><br><b>Flowchart</b>: every step, and where it splits or goes back<br><a href="tinycharts/examples/flowchart.js"><code>examples/flowchart.js</code></a></td>
+<td width="50%" valign="top"><a href="docs/gifs/flowchart.gif"><img src="docs/gifs/flowchart.gif" alt="Flowchart: every step, and where it splits" width="100%"></a><br><b>Flowchart</b>: every step, and where it splits<br><a href="tinycharts/examples/flowchart.js"><code>examples/flowchart.js</code></a></td>
 </tr>
 <tr>
 <td width="50%" valign="top"><a href="docs/gifs/decision-tree.gif"><img src="docs/gifs/decision-tree.gif" alt="Decision tree: every answer, and every outcome in view" width="100%"></a><br><b>Decision tree</b>: every answer, and every outcome in view<br><a href="tinycharts/examples/decision-tree.js"><code>examples/decision-tree.js</code></a></td>
@@ -96,7 +96,12 @@ Link the skill folder into your skills folder:
 ln -s "$PWD/tinycharts" ~/.claude/skills/tinycharts
 ```
 
-Then ask Claude Code for a diagram, for example "show how a pull request gets merged, as a tinycharts sheet".
+Then ask Claude Code for a diagram. Some prompts:
+
+- A new subject: "Show how a pull request gets merged, as a tinycharts sheet."
+- A type you choose: "Make a tinycharts kanban of our hiring pipeline: applied, screen, interview, offer, hired."
+- One example with your content: "Copy `examples/kanban.js` for our support tickets. Keep its layout. Change the columns to new, triage, fix, verify, closed."
+- Your colours: "Make the hiring kanban with the `sea` theme." Or: "Make a theme with our colours: ink #1d2b53, red #e4572e, paper #fbfaf7. Then build the sheet with it."
 
 ## Commands
 
@@ -105,6 +110,7 @@ Then ask Claude Code for a diagram, for example "show how a pull request gets me
 | See all 28 example sheets on one page | `bun scripts/gallery.mjs -o .tmp/all.html` |
 | Start a new sheet from the template of a type | `bun tinycharts/build/new.mjs <type> <dir>/<name>` |
 | Check a sheet, build its page and audit every state | `bun tinycharts/build/make.mjs <dir>/<name>.js -o <dir>/<name>.html [--png <dir>/png]` |
+| Build with other colours (see `tinycharts/themes/`) | add `--theme <theme>.json` to `make.mjs` or `build.mjs` |
 | Build a page only, with no checks | `bun tinycharts/build/build.mjs <a>.js [<b>.js ...] -o <page>.html [--logic]` |
 | Export SVG and PNG files | `bun tinycharts/build/export.mjs <page>.html [--state <id> \| --story] [--svg] [--png] -o <dir>` |
 | Record Play all as a GIF | `bun tinycharts/build/gif.mjs <page>.html [--width 560] [--fps 10] -o <name>.gif` |

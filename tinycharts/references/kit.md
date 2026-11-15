@@ -1,12 +1,12 @@
 # The kit
 
-The kit is plain script files that share one scope. The build loads them in this order: `core`, `pen`, `marker`, `solids`, `life`, `text`, `marks`, `logo`, `objects`, `motion`. A sheet calls the functions below by name.
+The kit is plain script files that share one scope. The build loads them in this order: `core`, `pen`, `marker`, `solids`, `life`, `text`, `marks`, `logo`, `objects`, `motion`. A sheet calls the functions below by name. To see the main parts drawn, with their names, build `examples/kit-catalogue.js`.
 
 **Points.**
 - A *world point* is `[x, y, z]`. x runs down and to the right, y runs down and to the left, z runs up.
 - A *sheet point* is `[sx, sy]` in pixels. `P(x, y, z)` turns a world point into a sheet point. `OX` and `OY` set where the world origin falls on the sheet.
 
-**Colours.** `PAL` holds the marker palette: `cream sand tan wood bark sage leaf mint sky blue navy lilac rose brick mustard butter stone grey`, plus `paper` and `red`. Keep `red` for the current state. `INK` is the line colour.
+**Colours.** `PAL` holds the marker palette: `cream sand tan wood bark sage leaf mint sky blue navy lilac rose brick mustard butter stone grey slate shade`, plus `paper`, `red` and `ink`. Keep `red` for the current state. `INK` is the line colour. A theme changes these colours for one page (`references/sheet.md`, Themes).
 
 ## core
 
@@ -26,7 +26,7 @@ The kit is plain script files that share one scope. The build loads them in this
 
 - `line(pts, {w, col, amp, over, curve})`: a hand-drawn stroke through sheet points.
 - `rim(pts, w, col)`: one stroke per edge, corners crossed a little.
-- `pen(pts, w)`: a light stroke. `edge(a, b, w, over)`: one edge.
+- `edge(a, b, w, over)`: one edge.
 - `rule(pairs, col, w)`: many thin lines at once. Each pair is `[a, b]`.
 - `dash(a, b, col, on, off, w)`: a dashed line.
 - `wander(lamMin, lamMax, n)`, `resample(pts, ds)`, `hand(pts, amp, over, curve)`: the stroke maths that `line` uses.
@@ -109,7 +109,7 @@ Nothing moves in a still page (bare or export). Each move finishes at once there
 - `glide(ctx, el, a, b, {then, arc, spin, radius, clock, follow, ms})`: move a drawn thing from world point a to b on a low arc. Then redraw in `then`. `clock: [dialEl, m0, m1]` turns the dial's hands with the move, for exactly as long. `dialEl` is the dial or a group round it. `follow: w` keeps the camera on the thing while it moves, `w` sheet pixels wide. `ms` sets the time of the move, for a move that stands for a long time.
 - `hops(ctx, el, pts, {then, arc, rest, clock, follow})`: move a thing through several world points, one hop per leg, with a short rest at each point. `clock` and `follow` as in `glide`. For one smooth walk with no stops (round a clock, along a path), use `tween`.
 - `crossfade(ctx, redraw, ms)`: redraw the sheet, and fade the old picture out over the new one. Use it for a redraw that changes how a place looks (the light, a fire, a sign), so the change is soft, not a jump.
-- `tween(ctx, ms, step, then)`: call `step(k)` on each frame for `ms`, with `k` from 0 to 1, eased. The move holds the animation lock like `glide`, so Play all waits for it. Use it for every move that the other helpers do not make: a walk along a curve, a level that rises, a belt, a hand on a big dial. Set the `transform` or the attributes in `step`, and redraw in `then`.
+- `tween(ctx, ms, step, then)`: call `step(k)` on each frame for `ms`, with `k` from 0 to 1, eased. It returns the job: `job.finish()` jumps to the end, for a drag that cuts in. On a still page it returns `null`. The move holds the animation lock like `glide`, so Play all waits for it. Use it for every move that the other helpers do not make: a walk along a curve, a level that rises, a belt, a hand on a big dial. Set the `transform` or the attributes in `step`, and redraw in `then`.
 - `walk(ctx, el, pts, {then, ms, bob, follow, clock, onStep})`: walk a thing along world points at a steady pace, in one smooth move with a small step bob. Use it for a person or an animal on a path. `onStep(k, d, [sx, sy])` runs each frame, to leave a trail (footsteps, a red line) behind.
 - `hopsMs(pts, {rest})`: how long `hops` takes over pts, to time other motion with it.
 - `arrive(ctx, el, a, b, {delay})`: let a second thing follow the main move a beat later.

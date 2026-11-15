@@ -3,8 +3,9 @@
 // bun scripts/gifs.mjs [slug...]   (no slug: every sheet in the gallery)
 import fs from 'node:fs';
 import { spawnSync } from 'node:child_process';
+import { TYPES } from '../tinycharts/build/types.mjs';
 
-const gallery = JSON.parse(fs.readFileSync('tinycharts/examples/gallery.json', 'utf8')).map(e => e.key);
+const gallery = TYPES.map(t => t.slug);
 const args = process.argv.slice(2), slugs = args.length ? args : gallery;
 const bad = slugs.filter(s => !gallery.includes(s));
 if (bad.length) { console.error(`Not in the gallery: ${bad.join(', ')}`); process.exit(1); }

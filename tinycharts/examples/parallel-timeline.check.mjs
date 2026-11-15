@@ -20,7 +20,7 @@ export const result = check({
     { rule: 'One in the bathroom at a time', says: 'Two children are never in the bathroom at once.', holds: s => s.bath <= 1 },
     { rule: 'Nobody goes without the others', says: 'The door opens only when all four have their shoes on.', holds: s => s.at !== 'out' || s.shoes },
   ],
-  mutants: { 'all ready': true },
+  mutants: { 'all ready': true, 'not snoozed': true },
 });
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) writeResult(HERE + 'parallel-timeline.json', result);

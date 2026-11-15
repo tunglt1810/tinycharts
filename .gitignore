@@ -4,3 +4,4 @@ node_modules/
 tests/fixtures/*.json
 /tinycharts/icons/out/
 .DS_Store
+/tinycharts/examples/*.json

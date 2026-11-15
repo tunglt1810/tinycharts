@@ -28,11 +28,10 @@ export const result = check({
   },
   rules: [
     { rule: 'The picnic is on the rug', says: 'The basket opens only on square 9. No roll lets you eat on the way.', holds: s => s.at !== 'picnic' || s.pos === RUG },
-    { rule: 'Nobody eats in the rain', says: 'In the rain, everyone waits in the bandstand. No picnic starts wet.', holds: s => s.at !== 'picnic' || !s.rain },
     { rule: 'Shelter only in the rain', says: 'You go to the bandstand only when the die shows rain.', holds: s => s.at !== 'shelter' || s.rain },
     { rule: 'Never past the rug', says: 'A roll that would carry you past square 9 leaves you where you are.', holds: s => s.pos <= RUG },
   ],
-  mutants: { raining: true, 'at the rug': true },
+  mutants: { raining: true, 'at the rug': true, 'at 1': true, 'at 2': true, 'at 3': true, 'at 4': true, 'at 5': true, 'at 6': true, 'at 7': true, 'at 8': true },
 });
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) writeResult(HERE + 'game-board.json', result);

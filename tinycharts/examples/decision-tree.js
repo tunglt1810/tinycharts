@@ -85,7 +85,7 @@ function canIcon(cx, cy) {
   for (const d of [0, 5, 10]) out.push(`<circle cx="${n1(cx + 21 + d / 3)}" cy="${n1(cy - 6 + d)}" r="1.5" fill="${PAL.sky}"/>`);
 }
 
-function tree() {
+function twoHalves() {
   // the two halves: bright and shade
   for (const [x0, x1, cap, col] of [[60, 680, 'bright, by a window', '#f6eedc'], [720, 1340, 'shade, away from it', '#e8edf0']]) {
     out.push(`<rect x="${x0}" y="396" width="${x1 - x0}" height="574" rx="16" fill="${col}" stroke="#a89c8a" stroke-width="1.2" stroke-dasharray="6 6"/>`);
@@ -207,7 +207,7 @@ function fog() {
 }
 
 // the tree's own lines from one place to the next, as sheet polylines
-function route(from, to, path = V.path) {
+function pathFor(from, to, path = V.path) {
   if (CARDS[from] && CARDS[to]) {
     const [x, y] = bot(from), [tx, ty] = top(to), sx = x + (KIDS[from].indexOf(to) ? 24 : -24);
     return [[[sx, y], [sx, y + 30], [tx, y + 30], [tx, ty - 2]]];
@@ -227,7 +227,7 @@ function routeTo(id, path) {
   if (path.length >= 2) stops.push(WATER[path.slice(0, 2)]);
   if (!CARDS[id]) stops.push('potted');
   if (id === 'high_shelf') stops.push('high_shelf');
-  return stops.slice(1).flatMap((s, i) => route(stops[i], s, path));
+  return stops.slice(1).flatMap((s, i) => pathFor(stops[i], s, path));
 }
 
 // the yes and no on each branch, drawn over the red trail so it never hides them
@@ -236,7 +236,7 @@ function draw(seed) {
   begin(seed);
   OX = 700; OY = 0;
   PILLS = [];
-  tree();
+  twoHalves();
   shelf();
   cards();
   group('id="trail"', () => {
@@ -276,7 +276,7 @@ function init(ctx) {
   const $ = id => document.getElementById(id);
   const redraw = () => { draw(13); ctx.state(AT); };
   const go = (to, change = () => {}, path = V.path) => {
-    const legs = route(AT, to, path), pts = legs.length ? [tok(AT), ...legs.flat(), tok(to)] : way(AT, to, path);
+    const legs = pathFor(AT, to, path), pts = legs.length ? [tok(AT), ...legs.flat(), tok(to)] : way(AT, to, path);
     // the red line grows along the tree's lines just behind the token
     const grow = legs.map(leg => {
       const el = document.createElementNS('http://www.w3.org/2000/svg', 'path');

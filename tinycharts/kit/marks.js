@@ -1,15 +1,17 @@
 /* Tinycharts kit: marks. Red floor arrows, the "now" tag, the ring round the
    lit state and the legend. Arrows take world points; the rest sheet points. */
 
+// The head at b, pointing away from a, L long and 2W wide; map takes it to the sheet.
+function _head(a, b, L, col, map = p => p) {
+  const l = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, u = [(b[0] - a[0]) / l, (b[1] - a[1]) / l], v = [-u[1], u[0]], W = 6.5;
+  const head = [b, [b[0] - u[0] * L + v[0] * W, b[1] - u[1] * L + v[1] * W], [b[0] - u[0] * L - v[0] * W, b[1] - u[1] * L - v[1] * W]];
+  out.push(`<path class="head" d="${pathOf(head.map(map), true)}" fill="${col}"/>`);
+}
+
 function arrow(pts, o = {}) {
-  const z = p => p[2] || 0;
+  const z = p => p[2] || 0, [a, b] = pts.slice(-2);
   line(pts.map(p => P(p[0], p[1], z(p))), { w: 1.8, col: RED, amp: 0.55, over: 0, ...o });
-  const [a, b] = pts.slice(-2), l = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
-  const u = [(b[0] - a[0]) / l, (b[1] - a[1]) / l], v = [-u[1], u[0]], L = 15, W = 6.5;
-  const head = [P(b[0], b[1], z(b)),
-    P(b[0] - u[0] * L + v[0] * W, b[1] - u[1] * L + v[1] * W, z(b)),
-    P(b[0] - u[0] * L - v[0] * W, b[1] - u[1] * L - v[1] * W, z(b))];
-  out.push(`<path class="head" d="${pathOf(head, true)}" fill="${RED}"/>`);
+  _head(a, b, 15, RED, p => P(p[0], p[1], z(b)));
 }
 
 function route(a, b, horizontalFirst = true) {
@@ -22,9 +24,7 @@ function route(a, b, horizontalFirst = true) {
 function flowArrow(pts, { dashed = false, col = RED, w = 1.8 } = {}) {
   if (dashed) out.push(`<path d="${pathOf(pts)}" fill="none" stroke="${col}" stroke-width="${w}" stroke-dasharray="7 6" stroke-linecap="round" stroke-linejoin="round"/>`);
   else line(pts, { w, col, amp: 0.55, over: 0 });
-  const [a, b] = pts.slice(-2), l = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
-  const u = [(b[0] - a[0]) / l, (b[1] - a[1]) / l], v = [-u[1], u[0]], L = 14, W = 6.5;
-  out.push(`<path class="head" d="${pathOf([b, [b[0] - u[0] * L + v[0] * W, b[1] - u[1] * L + v[1] * W], [b[0] - u[0] * L - v[0] * W, b[1] - u[1] * L - v[1] * W]], true)}" fill="${col}"/>`);
+  _head(...pts.slice(-2), 14, col);
 }
 
 function nowTag(sx, sy) {

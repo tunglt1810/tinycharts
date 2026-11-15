@@ -2,7 +2,7 @@
 // draws it. The last row moves: a cart that glides between two stops, steam,
 // a walker, and a bird that hops when clicked.
 const SIZE = [2400, 1960];
-const ABOUT = 'every part of the kit, by name';
+const ABOUT = 'the main parts of the kit, by name';
 const COLS = 6, CW = 376, CH = 300, X0 = 72, Y0 = 280;
 const STOP = { home: [-70, 30], away: [30, -70] };
 let AT = 'home';
@@ -20,7 +20,7 @@ function cell(i, name, note, art) {
 
 function draw(seed) {
   begin(seed);
-  title('the kit', 'Everything the kit can draw');
+  title('the kit', 'The main parts of the kit');
   subtitle('each cell is one call; the bottom row moves');
   status(AT === 'home' ? 'the cart is home' : 'the cart is away', 'press the buttons, or click the bird');
 
@@ -83,11 +83,11 @@ function draw(seed) {
     ['stroll', 'pacing to and fro', () => group('id="walker"', () => who(-60, 0, { shirt: PAL.brick, hair: 'bun' }))],
     ['ctx.no', 'a refused press shakes', (cx, cy) => _text(cx, cy, 'press send twice', { size: 20, anchor: 'middle', col: RED })],
     ['tc-pop', 'the lit marks drop in', (cx, cy) => _text(cx, cy, 'watch the glide cell', { size: 20, anchor: 'middle', col: LEAD })],
-    ['ctx.follow', 'see the flow demo', (cx, cy) => _text(cx, cy, 'the camera follows', { size: 20, anchor: 'middle', col: LEAD })],
+    ['ctx.follow', 'see flowchart-tech', (cx, cy) => _text(cx, cy, 'the camera follows', { size: 20, anchor: 'middle', col: LEAD })],
   ];
   cells.forEach(([name, note, art], i) => cell(i, name, note, art));
   OX = SIZE[0] / 2; OY = SIZE[1] / 2;
-  footnote('Every cell uses the kit as a sheet would. The names are the calls in tinycharts/kit.', 2256);
+  footnote('Illustrative: each cell uses the kit as a sheet would. The names are the calls in tinycharts/kit. The full list is in references/kit.md.', 2256);
   finish();
 }
 

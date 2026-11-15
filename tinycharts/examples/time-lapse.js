@@ -289,34 +289,29 @@ function init(ctx) {
   const lapse = (h0, h1, then) => {
     if (job) job.finish();
     if (ctx.still || Math.abs(h1 - h0) < 0.01) { then(); return; }
-    const ms = Math.min(4500, 900 + Math.abs(h1 - h0) * 450), t0 = performance.now();
-    let raf = 0, drawn = 0;
-    const j = { done: false, finish() { if (j.done) return; j.done = true; cancelAnimationFrame(raf); clearTimeout(safety); job = null; PREVIEW = false; then(); ctx.idle(j); } };
+    const ms = Math.min(4500, 900 + Math.abs(h1 - h0) * 450);
+    let drawn = 0;
     // A whole redraw takes longer than a 60 Hz frame, so the sheet is redrawn
     // at most 30 times a second; between, only the light and the knob move.
-    const step = now => {
-      if (j.done) return;
-      const k = Math.min(1, Math.max(0, (now - t0) / ms));
-      H = h0 + (h1 - h0) * easeInOut(k); PREVIEW = true;
+    job = tween(ctx, ms, e => {
+      const now = performance.now();
+      H = h0 + (h1 - h0) * e; PREVIEW = true;
       if (now - drawn > 30) { draw(SEED); light(); drawn = now; }
       else {
         const hh = ((H % 24) + 24) % 24, m = document.querySelector('#lapse feColorMatrix');
         if (m) m.setAttribute('values', tint(hh));
         for (const c of document.querySelectorAll('#knob circle')) c.setAttribute('cx', n1(hx(hh)));
       }
-      if (k < 1) raf = requestAnimationFrame(step); else j.finish();
-    };
-    const safety = setTimeout(j.finish, ms + 200);
-    job = j; ctx.busy(j); raf = requestAnimationFrame(step);
+    }, () => { PREVIEW = false; then(); });
   };
   const land = (to, v) => () => { AT = to; V = v; H = HOUR[to]; redraw(); };
   const upTo = (h0, to) => (HOUR[to] < h0 - 0.01 && to === 'dawn' ? HOUR[to] + 24 : HOUR[to]);
   // walk the statechart toward a stop, one next step at a time, until a guard says no
-  const walk = (target, from = H) => {
-    let at = AT, v = { ...V }, no = null, say = null;
-    while (at !== target) { const p = plan(at, v); if (p.no) { no = p.no; break; } at = p.to; v = p.v; say = p.say || SAY[at]; }
-    if (no) ctx.no(at === AT ? no : `${no} The day stops at ${NAMES[at]}.`); else ctx.say(say);
-    lapse(from, upTo(from, at), land(at, v));
+  const stepTo = (target, from = H) => {
+    let here = AT, v = { ...V }, no = null, say = null;
+    while (here !== target) { const p = plan(here, v); if (p.no) { no = p.no; break; } here = p.to; v = p.v; say = p.say || SAY[here]; }
+    if (no) ctx.no(here === AT ? no : `${no} The day stops at ${NAMES[here]}.`); else ctx.say(say);
+    lapse(from, upTo(from, here), land(here, v));
   };
   const canon = id => ({
     red: ORD[id] >= ORD.rip,
@@ -327,7 +322,7 @@ function init(ctx) {
   ctx.button('next step', () => {
     const p = plan(AT, V);
     if (p.no) return ctx.no(p.no);
-    walk(p.to);
+    stepTo(p.to);
   });
   ctx.button('rip current', () => {
     if (AT === 'rip') return ctx.no('The red flag is up already.');
@@ -364,7 +359,7 @@ function init(ctx) {
     PREVIEW = false;
     const target = STOPS.reduce((b, s) => (Math.abs(s[1] - h) < Math.abs(b[1] - h) ? s : b))[0];
     if (target === AT) { ctx.no(`It is ${clock(HOUR[AT])} already. Drag further along.`); return lapse(h, HOUR[AT], land(AT, V)); }
-    if (ORD[target] > ORD[AT]) return walk(target, h);
+    if (ORD[target] > ORD[AT]) return stepTo(target, h);
     // back in time is not a step of the day: it opens that stop afresh, as #state= does
     const v = canon(target);
     ctx.say(`Back to ${clock(HOUR[target])}. ${SAY[target]}`);

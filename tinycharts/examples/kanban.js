@@ -121,7 +121,7 @@ function shop() {
   OX = 700; OY = 0;
 }
 
-function board() {
+function cardBoard() {
   out.push(`<rect x="72" y="546" width="1256" height="730" rx="10" fill="${PAL.wood}" stroke="${INK}" stroke-width="1.4"/>`);
   out.push(`<rect x="84" y="558" width="1232" height="706" rx="6" fill="#e2d2b4"/>`);
   for (let c = 1; c < 6; c++) out.push(`<rect x="${colX(c) - 3}" y="558" width="6" height="706" fill="#ecdcb2"/>`);
@@ -169,7 +169,7 @@ function draw(seed) {
     if (k < 3) flowArrow([[x + w + 4, 286], [x + w + 26, 286]], { w: 1.4, col: INK });
     x += w + 30;
   });
-  board();
+  cardBoard();
   ORDERS.forEach((_, i) => group(`id="card${i}"`, () => card(i, ...slot(i, V.pos[i]))));
   if (AT === 'held') {
     const fit = V.pos.findIndex(p => p === 4), [hx, hy] = slot(fit, 4);

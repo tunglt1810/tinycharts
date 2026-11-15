@@ -213,3 +213,13 @@ test('hourglass shows the sand still to run in the top bulb', () => {
   assert.doesNotMatch(k.out.join(''), /class="sand top"/);
   assert.match(k.out.join(''), /class="sand bottom"/);
 });
+
+test('tween returns its job: finish jumps to the end once', () => {
+  const k = loadKit(), ctx = fakeCtx();
+  let done = 0;
+  const job = k.tween(ctx, 500, () => {}, () => done++);
+  job.finish(); job.finish();
+  assert.equal(done, 1);
+  assert.deepEqual(ctx.log.map(l => l[0]), ['busy', 'idle']);
+  assert.equal(k.tween(fakeCtx(true), 500, () => {}), null, 'a still page has no job');
+});

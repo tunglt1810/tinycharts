@@ -2,6 +2,7 @@
 // bun tinycharts/build/icon.mjs <name...> [--force] [--offline] [--icons dir] [-o tinycharts/icons/out]
 import fs from 'node:fs';
 import path from 'node:path';
+import { parseArgs } from 'node:util';
 import { fileURLToPath } from 'node:url';
 import { loadTech, lookup } from './tech.mjs';
 import { fetchLogo, LOGO_DIR } from './logos.mjs';
@@ -11,19 +12,12 @@ import { exportSheet } from './export.mjs';
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const TMP = path.resolve('.tmp/icons');
 
-function parse(argv) {
-  const o = { names: [], force: false, offline: false, icons: LOGO_DIR, out: path.join(ROOT, 'icons', 'out') };
-  for (let i = 0; i < argv.length; i++) {
-    const a = argv[i];
-    if (a === '--force') o.force = true;
-    else if (a === '--offline') o.offline = true;
-    else if (a === '--icons') o.icons = argv[++i];
-    else if (a === '-o') o.out = argv[++i];
-    else if (a.startsWith('-')) throw new Error(`Unknown option: ${a}`);
-    else o.names.push(a);
-  }
-  if (!o.names.length) throw new Error('Usage: icon.mjs <name...> [--force] [--offline] [--icons dir] [-o dir]');
-  return o;
+function parse(args) {
+  const { values: v, positionals: names } = parseArgs({ args, allowPositionals: true, options: {
+    force: { type: 'boolean' }, offline: { type: 'boolean' }, icons: { type: 'string', default: LOGO_DIR }, o: { type: 'string', short: 'o', default: path.join(ROOT, 'icons', 'out') },
+  } });
+  if (!names.length) throw new Error('Usage: icon.mjs <name...> [--force] [--offline] [--icons dir] [-o dir]');
+  return { names, force: !!v.force, offline: !!v.offline, icons: v.icons, out: v.o };
 }
 
 // Objects are drawn at sheet scale, which is small in a 320 px icon; the
