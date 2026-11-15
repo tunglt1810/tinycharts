@@ -64,7 +64,7 @@ function edgeEnds(a, b) {
   const te = uy < -0.5 ? (R + 38) / -uy : R + 6;
   return [[x0 + ux * (R + 4), y0 + uy * (R + 4)], [x1 - ux * te, y1 - uy * te]];
 }
-function edge(a, b, lit) {
+function link(a, b, lit) {
   flowArrow(edgeEnds(a, b), { w: lit ? 2.4 : 1.2, col: lit ? RED : INK });
 }
 
@@ -73,7 +73,7 @@ function draw(seed) {
   OX = 700; OY = 0;
   village();
   const told = i => FRESH & (1 << i);
-  for (const [a, b] of CALLS) edge(a, b, told(b) && knows(a) && WHEN[a] === ROUND - 1);
+  for (const [a, b] of CALLS) link(a, b, told(b) && knows(a) && WHEN[a] === ROUND - 1);
   out.push(`<circle cx="330" cy="310" r="6" fill="${INK}"/>`);
   flowArrow([[328, 318], [AT_[0][0] + 8, AT_[0][1] - R - 6]], { w: 1.3, col: INK });
   _text(344, 306, 'the school shuts: the head rings first', { size: 14, col: LEAD });

@@ -75,6 +75,7 @@ function _job(ctx, anims, ms, then) {
   const safety = setTimeout(job.finish, ms + 50);
   anims[0].onfinish = job.finish;
   ctx.busy(job);
+  return job;
 }
 
 // Moves a drawn thing along world points pts, one low hop per leg, with a
@@ -195,7 +196,8 @@ function crossfade(ctx, redraw, ms = 650) {
 // Runs step(k), k from 0 to 1 eased, on each frame for ms, under the
 // animation lock like glide; then() once at the end. For a move the kit has
 // no helper for: a level that rises, a hand on a big dial, a belt.
+// Returns the job: job.finish() jumps to the end, for a drag that cuts in.
 function tween(ctx, ms, step, then = () => {}) {
-  if (ctx.still) { step(1); then(); return; }
-  _job(ctx, [_raf(ms, k => step(easeInOut(k)))], ms, then);
+  if (ctx.still) { step(1); then(); return null; }
+  return _job(ctx, [_raf(ms, k => step(easeInOut(k)))], ms, then);
 }

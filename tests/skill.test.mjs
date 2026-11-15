@@ -33,3 +33,16 @@ test('sheet.md names the commands', () => {
   const s = read(`${REF}sheet.md`);
   for (const c of ['new.mjs', 'make.mjs', 'export.mjs', 'logos.mjs', 'icon.mjs']) assert.ok(s.includes(c), c);
 });
+
+// A template that reuses a kit name hides the kit function from every sheet
+// copied from it, and a sheet that forgets its own helper gets the kit's.
+test('no example declares a name of the kit', () => {
+  const kit = fs.readdirSync('tinycharts/kit').map(f => read(`tinycharts/kit/${f}`)).join('\n');
+  const names = new Set([...kit.matchAll(/^(?:function|const|let)\s+([A-Za-z_$][\w$]*)/gm)].map(m => m[1]));
+  for (const f of fs.readdirSync('tinycharts/examples').filter(f => f.endsWith('.js'))) {
+    const js = read(`tinycharts/examples/${f}`);
+    const used = [...js.matchAll(/(?:function|const|let|var)\s+([A-Za-z_$][\w$]*)/g), ...js.matchAll(/,\s*([A-Za-z_$][\w$]*)\s*=(?!=)/g)]
+      .map(m => m[1]).filter(n => names.has(n));
+    assert.deepEqual([...new Set(used)], [], f);
+  }
+});

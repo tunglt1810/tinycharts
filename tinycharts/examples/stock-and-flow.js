@@ -12,7 +12,7 @@ function cloudAt(cx, cy, label) {
   shape(blob(cx, cy, 46, 26, 0.18, 9), '#e7eaee', { w: 1.1 });
   _text(cx, cy + 50, label, { size: 15, col: LEAD, anchor: 'middle' });
 }
-function pipe(pts, on) {
+function flowPipe(pts, on) {
   out.push(`<path d="${pathOf(pts)}" fill="none" stroke="${INK}" stroke-width="11" stroke-linejoin="round"/>`);
   out.push(`<path d="${pathOf(pts)}" fill="none" stroke="${on ? '#a9c4d6' : PAPER}" stroke-width="7" stroke-linejoin="round"/>`);
   if (on && FLOWING) out.push(`<path class="stream" d="${pathOf(pts)}" fill="none" stroke="#4f86b3" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 12"/>`);
@@ -27,19 +27,19 @@ function diagram() {
   const lv = BY[1] - L * PXL;
   // inflow: the water main, through the tap, into the bath
   cloudAt(150, 360, 'the water main');
-  pipe([[196, 360], [690, 360], [690, BY[0] - 14]], LAST === 'tap');
+  flowPipe([[196, 360], [690, 360], [690, BY[0] - 14]], LAST === 'tap');
   flowArrow([[690, BY[0] - 24], [690, BY[0] - 2]], { w: 2, col: INK });
   valve(420, 360, LAST === 'tap');
   _text(440, 322, 'tap in', { size: 17 });
   _text(440, 342, `+${STEP} L a turn`, { size: 14, col: LEAD });
   // outflows: the overflow near the top, the plug at the bottom
-  pipe([[BX[1], BY[0] + 6], [1120, BY[0] + 6]], LAST === 'spill');
+  flowPipe([[BX[1], BY[0] + 6], [1120, BY[0] + 6]], LAST === 'spill');
   flowArrow([[1100, BY[0] + 6], [1128, BY[0] + 6]], { w: 2, col: INK });
   valve(960, BY[0] + 6, LAST === 'spill');
   _text(960, BY[0] - 40, 'overflow', { size: 17, anchor: 'middle' });
   _text(960, BY[0] + 40, 'what the tap adds when full', { size: 13, col: LEAD, anchor: 'middle' });
   cloudAt(1190, BY[0] + 6, 'the drain');
-  pipe([[BX[1], BY[1] - 6], [1120, BY[1] - 6]], LAST === 'plug');
+  flowPipe([[BX[1], BY[1] - 6], [1120, BY[1] - 6]], LAST === 'plug');
   flowArrow([[1100, BY[1] - 6], [1128, BY[1] - 6]], { w: 2, col: INK });
   valve(960, BY[1] - 6, LAST === 'plug');
   _text(960, BY[1] + 26, 'plug', { size: 17, anchor: 'middle' });

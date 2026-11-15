@@ -132,9 +132,9 @@ function init(ctx) {
   const go = (to, change = () => {}) => {
     // he stands up to walk
     WALK = true; draw(4); ctx.state(AT);
-    const h0 = H, h1 = HOUR[to] + (HOUR[to] < h0 ? 24 : 0), keeper = $('keeper'), hand = $('hand');
+    const h0 = H, h1 = HOUR[to] + (HOUR[to] < h0 ? 24 : 0), keeper = $('keeper'), handEl = $('hand');
     const s0 = spot(AT), s1 = spot(to), [kx, ky] = P(...s0), ms = Math.max(1600, (h1 - h0) * 520 + 600);
-    const rim = h => pt(h + 0.6, R - 70), ra = rim(h0), rb = rim(h1), mix = (p, q, u) => [p[0] + (q[0] - p[0]) * u, p[1] + (q[1] - p[1]) * u];
+    const ringAt = h => pt(h + 0.6, R - 70), ra = ringAt(h0), rb = ringAt(h1), mix = (p, q, u) => [p[0] + (q[0] - p[0]) * u, p[1] + (q[1] - p[1]) * u];
     // drawn in depth order he would pass behind the scenes nearer the front,
     // so while he walks the front half he is moved to the top of the picture
     const home = keeper && keeper.nextSibling, art = $('art');
@@ -142,15 +142,15 @@ function init(ctx) {
     sweep(ctx, $('clock'), h0 * 60, h1 * 60, ms);
     tween(ctx, ms, k => {
       const h = h0 + (h1 - h0) * Math.min(1, Math.max(0, (k - 0.12) / 0.76));
-      const w = k < 0.12 ? mix(s0, ra, k / 0.12) : k > 0.88 ? mix(rb, s1, (k - 0.88) / 0.12) : rim(h);
+      const w = k < 0.12 ? mix(s0, ra, k / 0.12) : k > 0.88 ? mix(rb, s1, (k - 0.88) / 0.12) : ringAt(h);
       const [x, y] = P(...w), bob = Math.abs(Math.sin(k * (h1 - h0 + 2) * 5)) * 3, front = w[0] + w[1] > -60;
       if (keeper) {
         keeper.setAttribute('transform', `translate(${n1(x - kx)} ${n1(y - ky - bob)})`);
         if (front && keeper.nextSibling) art.append(keeper);
         else if (!front && home && keeper.nextSibling !== home) home.before(keeper);
       }
-      const a = P(...pt(h, 74, 1)), b = P(...pt(h, R - 40, 1)), l = hand && hand.querySelector('path'), c = hand && hand.querySelector('circle');
-      // the drawn hand is a filled stroke; while it turns it is a plain line
+      const a = P(...pt(h, 74, 1)), b = P(...pt(h, R - 40, 1)), l = handEl && handEl.querySelector('path'), c = handEl && handEl.querySelector('circle');
+      // the drawn handEl is a filled stroke; while it turns it is a plain line
       if (l) { l.setAttribute('d', pathOf([a, b])); l.setAttribute('fill', 'none'); l.setAttribute('stroke', RED); l.setAttribute('stroke-width', '3'); l.setAttribute('stroke-linecap', 'round'); }
       if (c) { c.setAttribute('cx', n1(b[0])); c.setAttribute('cy', n1(b[1])); }
     }, () => { change(); WALK = false; AT = to; H = HOUR[to]; redraw(); ctx.track($('keeper'), 760); });

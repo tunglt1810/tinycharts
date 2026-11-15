@@ -89,7 +89,7 @@ function marks() {
 
 // the last ten minutes, four times wider: one bar row for each child
 function inset() {
-  const E = end(), x0 = 160, w = 380, y0 = 1036, at = m => x0 + (m - (E - 10)) / 10 * w;
+  const E = end(), x0 = 160, w = 380, y0 = 1036, xAt = m => x0 + (m - (E - 10)) / 10 * w;
   _text(72, 1006, `the last ten minutes, ${Math.round(w / 10 / (12 * C))}× wider`, { size: 17, col: RED });
   plan().forEach((segs, k) => {
     const y = y0 + k * 28;
@@ -97,12 +97,12 @@ function inset() {
     for (const [kind, a, b] of segs) {
       const p = Math.max(a, E - 10), q = Math.min(b, E);
       if (q <= p) continue;
-      const r = [[at(p), y], [at(q), y], [at(q), y + 20], [at(p), y + 20]];
+      const r = [[xAt(p), y], [xAt(q), y], [xAt(q), y + 20], [xAt(p), y + 20]];
       flat(r, KIND[kind][0]); rim(r, 0.8);
     }
   });
-  line([[at(E), y0 - 8], [at(E), y0 + 116]], { w: 2, col: RED, over: 0 });
-  for (const m of [E - 10, E - 5, E]) _text(at(m), y0 + 140, clock(m), { size: 14, col: LEAD, anchor: 'middle' });
+  line([[xAt(E), y0 - 8], [xAt(E), y0 + 116]], { w: 2, col: RED, over: 0 });
+  for (const m of [E - 10, E - 5, E]) _text(xAt(m), y0 + 140, clock(m), { size: 14, col: LEAD, anchor: 'middle' });
 }
 
 function draw(seed) {

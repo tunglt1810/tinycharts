@@ -50,16 +50,16 @@ function ribbon(x0, a0, b0, x1, a1, b1, col) {
 function bands(L) {
   const { f, y } = L;
   // sources to uses: the mains carries every use in order, the barrel only the garden's last part
-  let at = y.mains;
+  let yAt = y.mains;
   for (const u of USES) {
     const fromMains = u === 'garden' ? f.use.garden - f.src.barrel : f.use[u];
-    if (fromMains > 0) ribbon(XS[0] + BW, at, at + fromMains * S, XS[1], y[u], y[u] + fromMains * S, COL[u]);
-    at += fromMains * S;
+    if (fromMains > 0) ribbon(XS[0] + BW, yAt, yAt + fromMains * S, XS[1], y[u], y[u] + fromMains * S, COL[u]);
+    yAt += fromMains * S;
   }
   if (f.src.barrel) { const g0 = y.garden + (f.use.garden - f.src.barrel) * S; ribbon(XS[0] + BW, y.barrel, y.barrel + f.src.barrel * S, XS[1], g0, g0 + f.src.barrel * S, '#a9c79a'); }
   // uses to sinks
-  at = y.sewer;
-  for (const u of USES.slice(0, 4)) { ribbon(XS[1] + BW, y[u], y[u] + f.use[u] * S, XS[2], at, at + f.use[u] * S, COL[u]); at += f.use[u] * S; }
+  yAt = y.sewer;
+  for (const u of USES.slice(0, 4)) { ribbon(XS[1] + BW, y[u], y[u] + f.use[u] * S, XS[2], yAt, yAt + f.use[u] * S, COL[u]); yAt += f.use[u] * S; }
   ribbon(XS[1] + BW, y.garden, y.garden + f.use.garden * S, XS[2], y.soil, y.soil + f.use.garden * S, COL.garden);
   // where the water splits into the uses, and where the used water joins again
   for (const [x, yy, t, a] of [[XS[0] + BW + 6, y.mains - 10, 'splits five ways', 'start'], [XS[2] - 6, y.sewer - 10, 'four join', 'end']]) {

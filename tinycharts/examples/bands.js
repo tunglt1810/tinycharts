@@ -45,16 +45,16 @@ function hour(s) {
     return { no: `A second hour over 30 °C would scorch the seedlings. ${s.heater ? 'Switch the heater off, then open the vent.' : 'Open the vent.'}` };
   }
   if (s.h + 1 > 24.01) s = { ...s, h: 0, hist: [{ h: 0, t: s.t, heater: s.heater, vent: s.vent }] };
-  let n = s.t + DRIFT[Math.floor(s.h) % 24] + (s.heater ? HEAT : 0) - (s.vent ? AIR : 0), at = s.at, red = 0;
-  if (at === 'fine') at = band(n);
-  else if (at === 'cold') { n = Math.min(n, 9.5); red = s.red + 1; }
-  else if (at === 'hot') { n = Math.max(n, 30.5); red = s.red + 1; }
-  else if (at === 'heating' && n > 30) at = 'hot';
-  else if (at === 'venting' && n < 10) at = 'cold';
+  let n = s.t + DRIFT[Math.floor(s.h) % 24] + (s.heater ? HEAT : 0) - (s.vent ? AIR : 0), nextAt = s.at, red = 0;
+  if (nextAt === 'fine') nextAt = band(n);
+  else if (nextAt === 'cold') { n = Math.min(n, 9.5); red = s.red + 1; }
+  else if (nextAt === 'hot') { n = Math.max(n, 30.5); red = s.red + 1; }
+  else if (nextAt === 'heating' && n > 30) nextAt = 'hot';
+  else if (nextAt === 'venting' && n < 10) nextAt = 'cold';
   n = Math.round(Math.max(1, Math.min(39, n)) * 2) / 2;
-  const say = at === s.at ? `${clock(s.h + 1)}: ${deg(n)}.`
-    : at === 'cold' ? `${clock(s.h + 1)}: ${deg(n)}. Night falls: too cold.` : `${clock(s.h + 1)}: ${deg(n)}. The sun comes out: too hot${s.heater ? ', with the heater still on' : ''}.`;
-  return { s: push(s, { h: s.h + 1, t: n, at, red }), say };
+  const say = nextAt === s.at ? `${clock(s.h + 1)}: ${deg(n)}.`
+    : nextAt === 'cold' ? `${clock(s.h + 1)}: ${deg(n)}. Night falls: too cold.` : `${clock(s.h + 1)}: ${deg(n)}. The sun comes out: too hot${s.heater ? ', with the heater still on' : ''}.`;
+  return { s: push(s, { h: s.h + 1, t: n, at: nextAt, red }), say };
 }
 function heater(s) {
   switch (s.at) {
@@ -395,24 +395,19 @@ function init(ctx) {
     S = s2; ctx.say(say);
     const hrs = s2.h >= h0 ? s2.h - h0 : s2.h;
     if (ctx.still || (hrs < 0.01 && x0 === x1 && v0 === v1 && k0 === k1)) return redraw();
-    const ms = Math.min(3200, 900 + hrs * 380), t0 = performance.now();
+    const ms = Math.min(3200, 900 + hrs * 380);
     const from = s2.h >= h0 ? h0 : 0;
-    let raf = 0, drawn = 0, gx = 0;
-    const j = { done: false, finish() { if (j.done) return; j.done = true; cancelAnimationFrame(raf); clearTimeout(safety); job = null; redraw(); ctx.idle(j); } };
+    let drawn = 0, gx = 0;
     // A whole redraw takes longer than a 60 Hz frame: the sheet is redrawn at
     // most 30 times a second, and the ring glides along the strip on every frame.
-    const step = now => {
-      if (j.done) return;
-      const k = Math.min(1, Math.max(0, (now - t0) / ms)), e = easeInOut(k);
+    job = tween(ctx, ms, e => {
+      const now = performance.now();
       TV = from + (s2.h - from) * e;
       GHOST = x0 + (x1 - x0) * e;
       TW = { vent: v0 + (v1 - v0) * e, heater: k0 + (k1 - k0) * e };
       if (now - drawn > 30) { draw(SEED); dim(); drawn = now; gx = GHOST; }
       else { const g = $('ghost'); if (g) g.setAttribute('transform', `translate(${n1(GHOST - gx)} 0)`); }
-      if (k < 1) raf = requestAnimationFrame(step); else j.finish();
-    };
-    const safety = setTimeout(j.finish, ms + 200);
-    job = j; ctx.busy(j); raf = requestAnimationFrame(step);
+    }, redraw);
   };
   const press = fn => () => { const r = fn(S); if (r.no) return ctx.no(r.no); POS = -1; move(r.s, r.say); };
   ctx.button('wait an hour', press(hour));
