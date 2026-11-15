@@ -1,31 +1,31 @@
 // Build sheets into one self-contained HTML page.
-// bun tinycharts/build/build.mjs a.js [b.js ...] -o out.html [--names "A,B"] [--logic] [--gallery gallery.json] [--icons dir]
+// bun tinycharts/build/build.mjs a.js [b.js ...] -o out.html [--logic] [--gallery gallery.json] [--icons dir]
 import fs from 'node:fs';
 import path from 'node:path';
+import { parseArgs } from 'node:util';
 import { fileURLToPath } from 'node:url';
-import { loadTech } from './tech.mjs';
+import { loadTech, find } from './tech.mjs';
 import { sanitizeSvg, recolor, toLogo, PALETTE } from './logo-lib.mjs';
+import { TYPES } from './types.mjs';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
-const KIT_ORDER = ['core', 'pen', 'marker', 'solids', 'life', 'text', 'marks', 'logo', 'objects', 'motion'];
+export const KIT_ORDER = ['core', 'pen', 'marker', 'solids', 'life', 'text', 'marks', 'logo', 'objects', 'motion'];
+// cls: the sheet lettering classes that use the font, for an exported SVG.
+export const FONTS = [
+  { fam: 'Young Serif', file: 'young-serif-400.woff2', weight: 400, cls: 'tt' },
+  { fam: 'Gaegu', file: 'gaegu-400.woff2', weight: 400, cls: 'it|cap' },
+  { fam: 'DM Sans', file: 'dm-sans.woff2', weight: '400 500' },
+];
 // Chrome blocks @font-face by relative path on file:// pages, and
 // document.fonts.ready still resolves, so the fonts go in as data URIs.
-const FONTS = [['Young Serif', 'young-serif-400.woff2', 400], ['Gaegu', 'gaegu-400.woff2', 400], ['DM Sans', 'dm-sans.woff2', '400 500']];
+export const fontFace = f => `@font-face{font-family:"${f.fam}";font-weight:${f.weight};font-display:block;src:url(data:font/woff2;base64,${fs.readFileSync(path.join(ROOT, 'fonts', f.file)).toString('base64')}) format("woff2")}`;
 
-function parse(argv) {
-  const o = { files: [], out: null, names: null, logic: false, gallery: null, icons: undefined };
-  for (let i = 0; i < argv.length; i++) {
-    const a = argv[i];
-    if (a === '-o') o.out = argv[++i];
-    else if (a === '--names') o.names = argv[++i].split(',').map(s => s.trim());
-    else if (a === '--logic') o.logic = true;
-    else if (a === '--gallery') o.gallery = argv[++i];
-    else if (a === '--icons') o.icons = argv[++i];
-    else if (a.startsWith('--')) throw new Error(`Unknown option: ${a}`);
-    else o.files.push(a);
-  }
-  if (!o.files.length || !o.out) throw new Error('Usage: build.mjs a.js [b.js ...] -o out.html [--names "A,B"] [--logic] [--gallery gallery.json] [--icons dir]');
-  return o;
+function parse(args) {
+  const { values: v, positionals: files } = parseArgs({ args, allowPositionals: true, options: {
+    o: { type: 'string', short: 'o' }, logic: { type: 'boolean' }, gallery: { type: 'string' }, icons: { type: 'string' },
+  } });
+  if (!files.length || !v.o) throw new Error('Usage: build.mjs a.js [b.js ...] -o out.html [--logic] [--gallery gallery.json] [--icons dir]');
+  return { files, out: v.o, logic: !!v.logic, gallery: v.gallery || null, icons: v.icons };
 }
 
 const read = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
@@ -53,9 +53,11 @@ async function logicOf(files, keys) {
   return `const LOGICDATA = ${JSON.stringify(data)};\nconst PELE = ${JSON.stringify(svg)};\n`;
 }
 
-const GROUPS = ['Time', 'Space', 'Order', 'Flow', 'Who', 'Compare'];
-function galleryOf(file, keys) {
-  const name = path.basename(file), list = JSON.parse(fs.readFileSync(file, 'utf8'));
+const GROUPS = [...new Set(TYPES.map(t => t.group))];
+// gallery: a JSON file of {group, key, type, question}, or that list itself.
+function galleryOf(gallery, keys) {
+  const name = Array.isArray(gallery) ? 'gallery' : path.basename(gallery);
+  const list = Array.isArray(gallery) ? gallery : JSON.parse(fs.readFileSync(gallery, 'utf8'));
   for (const e of list) {
     if (!keys.includes(e.key)) throw new Error(`${name}: no sheet for "${e.key}"`);
     if (!GROUPS.includes(e.group)) throw new Error(`${name}: "${e.key}" has group "${e.group}", not one of ${GROUPS.join(', ')}`);
@@ -66,11 +68,11 @@ function galleryOf(file, keys) {
 // The technology table, and the logos of the technologies a sheet names in
 // quotes (by key, name or alias), recoloured to the marker palette.
 function iconsOf(sources, dir = path.join(ROOT, 'icons', 'logos')) {
-  const table = loadTech(), norm = s => s.trim().toLowerCase().replace(/\s+/g, ' ');
-  const quoted = new Set([...sources.join('\n').matchAll(/(['"])([\w .+#-]{1,40})\1/g)].map(m => norm(m[2])));
-  const logos = {};
-  for (const [key, e] of Object.entries(table)) {
-    if (e.logo === false || ![key, e.name, ...(e.alias || [])].some(n => quoted.has(norm(n)))) continue;
+  const table = loadTech(), logos = {};
+  const named = new Set([...sources.join('\n').matchAll(/(['"])([\w .+#-]{1,40})\1/g)].map(m => find(table, m[2])?.key).filter(Boolean));
+  for (const key of named) {
+    const e = table[key];
+    if (e.logo === false) continue;
     const file = path.join(dir, key + '.svg');
     if (!fs.existsSync(file)) { console.log(`note: ${key}: no logo, text fallback`); continue; }
     const lg = toLogo(recolor(sanitizeSvg(fs.readFileSync(file, 'utf8'), key), PALETTE), key);
@@ -79,12 +81,11 @@ function iconsOf(sources, dir = path.join(ROOT, 'icons', 'logos')) {
   return `const TECH = ${JSON.stringify(table)};\nconst LOGOS = ${JSON.stringify(logos)};\n`;
 }
 
-export async function build({ files, out, names, logic = false, gallery = null, icons }) {
-  const fonts = FONTS.map(([fam, file, w]) =>
-    `@font-face{font-family:"${fam}";font-weight:${w};font-display:block;src:url(data:font/woff2;base64,${fs.readFileSync(path.join(ROOT, 'fonts', file)).toString('base64')}) format("woff2")}`).join('');
+export async function build({ files, out, logic = false, gallery = null, icons }) {
+  const fonts = FONTS.map(fontFace).join('');
   const keys = files.map(f => path.basename(f, '.js'));
   const sheets = files.map((f, i) => `SHEETS[${JSON.stringify(keys[i])}] = (() => {\n${fs.readFileSync(f, 'utf8')}\n;return {draw, init, size: typeof SIZE === 'undefined' ? [1400, 1400] : SIZE, about: typeof ABOUT === 'undefined' ? '' : ABOUT};\n})();`).join('\n');
-  const meta = keys.map((k, i) => ({ key: k, name: (names && names[i]) || k }));
+  const meta = keys.map(k => ({ key: k, name: k }));
   const logicJs = (logic ? await logicOf(files, keys) : '') + (gallery ? galleryOf(gallery, keys) : '');
   const html = read('shell/page.html')
     .replace('/*FONTS*/', () => fonts)

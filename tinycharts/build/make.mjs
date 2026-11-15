@@ -4,25 +4,18 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { parseArgs } from 'node:util';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { build } from './build.mjs';
-import { dumpDom } from './chrome.mjs';
+import { readPage, textOf } from './chrome.mjs';
 import { parseMmd } from './mmd.mjs';
 import { exportSheet } from './export.mjs';
 
-function parse(argv) {
-  const o = { files: [], out: null, png: null };
-  for (let i = 0; i < argv.length; i++) {
-    if (argv[i] === '-o') o.out = argv[++i];
-    else if (argv[i] === '--png') o.png = argv[++i];
-    else if (argv[i].startsWith('-')) throw new Error(`Unknown option: ${argv[i]}`);
-    else o.files.push(argv[i]);
-  }
-  if (!o.files.length || !o.out) throw new Error('Usage: make.mjs a.js [b.js ...] -o out.html [--png dir]');
-  return o;
+function parse(args) {
+  const { values: v, positionals: files } = parseArgs({ args, allowPositionals: true, options: { o: { type: 'string', short: 'o' }, png: { type: 'string' } } });
+  if (!files.length || !v.o) throw new Error('Usage: make.mjs a.js [b.js ...] -o out.html [--png dir]');
+  return { files, out: v.o, png: v.png || null };
 }
-
-const unescape = s => s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
 
 // The problems with each sheet, as lines to print; none means the page is good.
 export async function make({ files, out, png = null }) {
@@ -39,13 +32,11 @@ export async function make({ files, out, png = null }) {
   const url = pathToFileURL(path.resolve(out)).href;
   for (const f of files) {
     const base = f.replace(/\.js$/, ''), key = path.basename(base);
-    const dom = await dumpDom(`${url}#sheet=${encodeURIComponent(key)}&audit=all`, { wait: 8000 });
-    const err = (dom.match(/<pre id="error"[^>]*>([^<]*)<\/pre>/) || [])[1];
-    if (err) { lines.push(`${key}: error: ${unescape(err)}`); continue; }
-    if (!/<body[^>]*data-ready="1"/.test(dom)) { lines.push(`${key}: page not ready`); continue; }
-    const audit = unescape((dom.match(/<pre id="audit"[^>]*>([^<]*)<\/pre>/) || [, ''])[1]);
-    lines.push(...audit.split('\n').filter(Boolean).map(l => `${key}: ${l}`));
-    const marked = new Set([...dom.matchAll(/data-state="([^"]+)"/g)].map(m => unescape(m[1])));
+    // Play all runs in the audit; virtual time plays minutes of it in seconds.
+    let dom;
+    try { dom = await readPage(`${url}#sheet=${encodeURIComponent(key)}&audit=all`, 600000); } catch (e) { lines.push(`${key}: ${e.message}`); continue; }
+    lines.push(...(textOf(dom, 'pre', 'audit') || '').split('\n').filter(Boolean).map(l => `${key}: ${l}`));
+    const marked = new Set([...dom.matchAll(/data-state="([^"]+)"/g)].map(m => m[1]));
     const { states } = parseMmd(fs.readFileSync(base + '.mmd', 'utf8'), path.basename(base + '.mmd'));
     const parents = new Set(states.map(s => s.parent).filter(Boolean));
     for (const s of states) if (s.kind !== 'choice' && !parents.has(s.id) && !marked.has(s.id)) lines.push(`${key}: no mark for state "${s.id}"`);

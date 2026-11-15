@@ -63,7 +63,7 @@ bun <skill>/build/make.mjs <dir>/<name>.js -o <dir>/<name>.html [--png <dir>]
 
 1. Make runs the check. A broken rule stops it.
 2. Make builds one page with the logic panel.
-3. Make opens every state in headless Chrome and audits it. It finds text off the sheet, text on top of other text, and states with no mark.
+3. Make opens every state in headless Chrome and audits it. It finds text off the sheet, text on top of other text, and states with no mark. Then it plays the story with Play all. An error in a move gives the line `<sheet>: error: <message>`. Make does not press the event buttons. Press each button yourself.
 4. Make prints each problem as `<sheet>: <state>: <problem>`, and exits 1. It prints `ok` when the page is clean.
 5. With `--png`, it also writes one PNG for each state of the story.
 

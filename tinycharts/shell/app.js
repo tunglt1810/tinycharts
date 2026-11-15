@@ -29,9 +29,8 @@
     $('back').hidden = true; $('pager').hidden = true;
     const grid = document.createElement('div');
     grid.id = 'cards';
-    for (const g of ['Time', 'Space', 'Order', 'Flow', 'Who', 'Compare']) {
+    for (const g of new Set(gallery.map(e => e.group))) {
       const items = gallery.filter(e => e.group === g);
-      if (!items.length) continue;
       const sec = document.createElement('section');
       sec.innerHTML = '<h2></h2><div class="row"></div>';
       sec.querySelector('h2').textContent = g;
@@ -209,6 +208,9 @@
     $('status').textContent = String(e && e.message || e);
     document.body.dataset.error = '1';
   }
+  // A throw in a move's callback runs after run() has returned.
+  addEventListener('error', e => fail(e.error || e.message));
+  addEventListener('unhandledrejection', e => fail(e.reason));
 
   const ctx = {
     say: text => { $('status').textContent = text; },
@@ -284,7 +286,7 @@
 
   // ---- run the sheet
   SHEET_W = W; SHEET_H = H;
-  let api = null;
+  let api = null, playAll = null;
   try {
     sheet.draw(7);
     api = sheet.init(ctx);
@@ -314,6 +316,7 @@
       };
       step(0);
     };
+    playAll = play.onclick;
     const reset = document.createElement('button');
     reset.className = 'reset';
     reset.textContent = '↺ Reset';
@@ -384,7 +387,7 @@
   }
   // audit=all opens every state the sheet marks or tells in its story, and
   // audits each one; a line starts with the state it was found in.
-  function audit(all) {
+  async function audit(all) {
     // the drop-in of the now marks would move a lit label off its own place
     document.body.classList.add('audit');
     setView([0, 0, W, H]);
@@ -399,6 +402,11 @@
     pre.id = 'audit';
     pre.textContent = lines.join('\n');
     document.body.append(pre);
+    // goto(id) alone never runs a sheet's moves; Play all runs every one.
+    if (all && playAll) {
+      playAll();
+      await new Promise(done => { const wait = () => (document.body.dataset.played ? done() : setTimeout(wait, 200)); wait(); });
+    }
   }
 
   // ---- export: a clean copy of the sheet for export.mjs. Marks of unlit
@@ -424,7 +432,7 @@
       fail(new Error('Fonts did not load'));
       return;
     }
-    if (hash.get('audit') === '1' || hash.get('audit') === 'all') audit(hash.get('audit') === 'all');
+    if (hash.get('audit') === '1' || hash.get('audit') === 'all') await audit(hash.get('audit') === 'all');
     if (hash.get('export') === '1') exportSvg();
     if (!document.body.dataset.error) document.body.dataset.ready = '1';
   })();

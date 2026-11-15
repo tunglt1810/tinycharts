@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import { TYPES } from '../tinycharts/build/types.mjs';
 
 const SKILL = 'tinycharts/SKILL.md', REF = 'tinycharts/references/';
 const read = f => fs.readFileSync(f, 'utf8');
@@ -11,11 +12,13 @@ test('SKILL.md has its front matter and stays short', () => {
   assert.ok(s.split('\n').length <= 220, `${s.split('\n').length} lines`);
 });
 
-test('every gallery sheet has a router row and a reference', () => {
-  const s = read(SKILL), gallery = JSON.parse(read('tinycharts/examples/gallery.json'));
-  for (const { key } of gallery) {
-    assert.match(s, new RegExp(`\\| [^|]+ \\| [^|]+ \\| \`examples/${key}\\.js\` \\| \`references/${key}\\.md\` \\|`), `router row for ${key}`);
-    assert.ok(fs.existsSync(`${REF}${key}.md`), `references/${key}.md`);
+test('every type has the same name and question in SKILL.md, README.md and its sheet', () => {
+  const s = read(SKILL), readme = read('README.md');
+  for (const { slug, name, question } of TYPES) {
+    assert.ok(s.includes(`| ${name} | ${question} | \`examples/${slug}.js\` | \`references/${slug}.md\` |`), `router row for ${slug}`);
+    assert.ok(readme.includes(`<b>${name}</b>: ${question}<br>`), `README caption for ${slug}`);
+    assert.ok(read(`tinycharts/examples/${slug}.js`).includes(`const ABOUT = '${question}';`), `ABOUT of ${slug}`);
+    assert.ok(fs.existsSync(`${REF}${slug}.md`), `references/${slug}.md`);
   }
 });
 

@@ -133,7 +133,6 @@ function rim(pts, w = 1.4, col = INK) {
   const d = pts.map((p, i) => _strokeD([p, pts[(i + 1) % pts.length]], w, 0.7, 1.2)).join('');
   if (d) out.push(`<path d="${d}" fill="${col}"/>`);
 }
-function pen(pts, w = 1) { line(pts, { w, over: 0, amp: 0.5 }); }
 function edge(a, b, w = 0.9, over = 1.6) { line([a, b], { w, over }); }
 
 function rule(pairs, col = INK, w = 0.6) {

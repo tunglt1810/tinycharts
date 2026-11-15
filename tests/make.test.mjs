@@ -19,3 +19,9 @@ test('make fails when a state of the statechart has no mark on the sheet', () =>
   const r = make('tests/fixtures/crowd.js', '-o', '.tmp/test/crowd.html');
   assert.match(r.stdout, /no mark for state "bolted"/);
 });
+
+test('make fails when Play all throws, even after the throw leaves the press', () => {
+  const r = make('tests/fixtures/stumble.js', '-o', '.tmp/test/stumble.html');
+  assert.equal(r.status, 1, r.stdout + r.stderr);
+  assert.match(r.stdout, /stumble: error: .*length/);
+});

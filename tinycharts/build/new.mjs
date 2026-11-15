@@ -3,6 +3,7 @@
 // bun tinycharts/build/new.mjs <type> <dir/name> [--force]
 import fs from 'node:fs';
 import path from 'node:path';
+import { parseArgs } from 'node:util';
 import { fileURLToPath } from 'node:url';
 import { typeOf } from './types.mjs';
 
@@ -32,9 +33,9 @@ export function newSheet(type, target, { force = false } = {}) {
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  const args = process.argv.slice(2), force = args.includes('--force'), [type, target] = args.filter(a => a !== '--force');
   try {
+    const { values: { force }, positionals: [type, target] } = parseArgs({ allowPositionals: true, options: { force: { type: 'boolean' } } });
     if (!type || !target) throw new Error('Usage: new.mjs <type> <dir/name> [--force]');
-    newSheet(type, target, { force }).forEach(f => console.log(path.relative(process.cwd(), f)));
+    newSheet(type, target, { force: !!force }).forEach(f => console.log(path.relative(process.cwd(), f)));
   } catch (e) { console.error(e.message); process.exit(1); }
 }

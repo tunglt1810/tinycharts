@@ -26,7 +26,7 @@ The kit is plain script files that share one scope. The build loads them in this
 
 - `line(pts, {w, col, amp, over, curve})`: a hand-drawn stroke through sheet points.
 - `rim(pts, w, col)`: one stroke per edge, corners crossed a little.
-- `pen(pts, w)`: a light stroke. `edge(a, b, w, over)`: one edge.
+- `edge(a, b, w, over)`: one edge.
 - `rule(pairs, col, w)`: many thin lines at once. Each pair is `[a, b]`.
 - `dash(a, b, col, on, off, w)`: a dashed line.
 - `wander(lamMin, lamMax, n)`, `resample(pts, ds)`, `hand(pts, amp, over, curve)`: the stroke maths that `line` uses.

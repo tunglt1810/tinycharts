@@ -35,7 +35,7 @@ Each GIF is a recording of Play all on the example sheet of one type. Open a she
 </tr>
 <tr>
 <td width="50%" valign="top"><a href="docs/gifs/bubble-diagram.gif"><img src="docs/gifs/bubble-diagram.gif" alt="Bubble diagram: which spaces connect, and how big" width="100%"></a><br><b>Bubble diagram</b>: which spaces connect, and how big<br><a href="tinycharts/examples/bubble-diagram.js"><code>examples/bubble-diagram.js</code></a></td>
-<td width="50%" valign="top"><a href="docs/gifs/flowchart.gif"><img src="docs/gifs/flowchart.gif" alt="Flowchart: every step, and where it splits or goes back" width="100%"></a><br><b>Flowchart</b>: every step, and where it splits or goes back<br><a href="tinycharts/examples/flowchart.js"><code>examples/flowchart.js</code></a></td>
+<td width="50%" valign="top"><a href="docs/gifs/flowchart.gif"><img src="docs/gifs/flowchart.gif" alt="Flowchart: every step, and where it splits" width="100%"></a><br><b>Flowchart</b>: every step, and where it splits<br><a href="tinycharts/examples/flowchart.js"><code>examples/flowchart.js</code></a></td>
 </tr>
 <tr>
 <td width="50%" valign="top"><a href="docs/gifs/decision-tree.gif"><img src="docs/gifs/decision-tree.gif" alt="Decision tree: every answer, and every outcome in view" width="100%"></a><br><b>Decision tree</b>: every answer, and every outcome in view<br><a href="tinycharts/examples/decision-tree.js"><code>examples/decision-tree.js</code></a></td>

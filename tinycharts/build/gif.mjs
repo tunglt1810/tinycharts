@@ -5,30 +5,22 @@
 import { spawn, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
+import { parseArgs } from 'node:util';
 import { pathToFileURL } from 'node:url';
-import { chromePath } from './chrome.mjs';
+import { chromePath, HEADLESS } from './chrome.mjs';
 
-function parse(argv) {
-  const o = { html: null, sheet: null, width: 560, fps: 10, max: 180, out: null };
-  for (let i = 0; i < argv.length; i++) {
-    const a = argv[i];
-    if (a === '--sheet') o.sheet = argv[++i];
-    else if (a === '--width') o.width = +argv[++i];
-    else if (a === '--fps') o.fps = +argv[++i];
-    else if (a === '--max') o.max = +argv[++i];
-    else if (a === '-o') o.out = argv[++i];
-    else if (a.startsWith('-')) throw new Error(`Unknown option: ${a}`);
-    else o.html = a;
-  }
-  if (!o.html || !o.out) throw new Error('Usage: gif.mjs out.html [--sheet <key>] [--width 560] [--fps 10] [--max 180] -o out.gif');
-  return o;
+function parse(args) {
+  const { values: v, positionals: [html] } = parseArgs({ args, allowPositionals: true, options: {
+    sheet: { type: 'string' }, width: { type: 'string', default: '560' }, fps: { type: 'string', default: '10' }, max: { type: 'string', default: '180' }, o: { type: 'string', short: 'o' },
+  } });
+  if (!html || !v.o) throw new Error('Usage: gif.mjs out.html [--sheet <key>] [--width 560] [--fps 10] [--max 180] -o out.gif');
+  return { html, sheet: v.sheet || null, width: +v.width, fps: +v.fps, max: +v.max, out: v.o };
 }
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 async function launch(dir) {
-  const p = spawn(chromePath(), ['--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check',
-    '--hide-scrollbars', '--mute-audio', '--allow-file-access-from-files', '--remote-debugging-port=0',
+  const p = spawn(chromePath(), [...HEADLESS, '--allow-file-access-from-files', '--remote-debugging-port=0',
     `--user-data-dir=${dir}`, 'about:blank'], { stdio: 'ignore' });
   const portFile = path.join(dir, 'DevToolsActivePort');
   for (let t = 0; !fs.existsSync(portFile); t++) {
