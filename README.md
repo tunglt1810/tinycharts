@@ -114,7 +114,7 @@ Then ask Claude Code for a diagram. Some prompts:
 | Build a page only, with no checks | `bun tinycharts/build/build.mjs <a>.js [<b>.js ...] -o <page>.html [--logic]` |
 | Export SVG and PNG files | `bun tinycharts/build/export.mjs <page>.html [--state <id> \| --story] [--svg] [--png] -o <dir>` |
 | Record Play all as a GIF | `bun tinycharts/build/gif.mjs <page>.html [--width 560] [--fps 10] -o <name>.gif` |
-| Record the README GIFs again | `bun scripts/gifs.mjs [slug...]` (no slug: all 28 examples, into `docs/gifs/`) |
+| Record the README GIFs again | `bun scripts/gifs.mjs [slug...]` (no slug: all 28 examples, into `docs/gifs/`, plus the site clips in `docs/media/`) |
 | Fetch a technology logo | `bun tinycharts/build/logos.mjs <key...>` |
 | Run the tests | `bun test` |
 

@@ -3,7 +3,7 @@ name: Pages
 on:
   push:
     branches: [main]
-    paths: [README.md, docs/gifs/**, scripts/site.mjs, .github/workflows/pages.yml]
+    paths: [README.md, docs/gifs/**, docs/media/**, scripts/site.mjs, scripts/gallery.mjs, tinycharts/**, package.json, bun.lock, .github/workflows/pages.yml]
   workflow_dispatch:
 
 permissions:
@@ -21,9 +21,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
       - run: bun scripts/site.mjs -o _site
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
