@@ -7,9 +7,14 @@
       "dependencies": {
         "pele": "^1.13.0",
       },
+      "devDependencies": {
+        "cozy": "github:tunglt1810/cozy#4177a572acadf0dd856b0224133c08eaa3bb0e04",
+      },
     },
   },
   "packages": {
+    "cozy": ["cozy@github:tunglt1810/cozy#4177a57", {}, "tunglt1810-cozy-4177a57", "sha512-1yJss3XG4Zt9H7dVlYMFgr9Wumnzo/J7gRt7cJHANRSNsRui7D+OZ3uRMKaogYMKU9i1xF0Jr1/TKlqQ+LmZ8A=="],
+
     "pele": ["pele@1.13.0", "", {}, "sha512-Ie8UKY9x00MsuR3jO6AzUwzK2Z6MIV3Tf4EDdITiuk8Uaz8K7g0R082WqsqNaSU8DdgkrRvZThzhit83mi/uiw=="],
   }
 }
