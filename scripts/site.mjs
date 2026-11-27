@@ -1,5 +1,5 @@
 // Builds the GitHub Pages site: bun scripts/site.mjs [-o _site]
-// The page uses the Cozy design system (devDependency). It needs ffmpeg and ffprobe.
+// The page uses the Cozy design system (devDependency). The clips in docs/media come from scripts/gifs.mjs.
 // Pages serves the page, the interactive gallery and the media. Links to repo files go to github.com.
 import { spawnSync } from 'node:child_process';
 import { cpSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -22,21 +22,15 @@ const run = (cmd, args) => {
 };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 
-mkdirSync(`${outDir}/media`, { recursive: true });
 mkdirSync(`${outDir}/cozy`, { recursive: true });
 mkdirSync(`${outDir}/fonts`, { recursive: true });
 
-// A 6 MB GIF is about 270 KB as H.264. The first frame is the poster.
 const media = {};
 for (const { slug } of TYPES) {
-  const gif = `docs/gifs/${slug}.gif`;
-  const [w, h] = run('ffprobe', ['-v', 'error', '-show_entries', 'stream=width,height', '-of', 'csv=p=0', gif]).trim().split(',').map(Number);
-  run('ffmpeg', ['-v', 'error', '-y', '-i', gif, '-movflags', '+faststart', '-pix_fmt', 'yuv420p',
-    '-vf', 'scale=trunc(iw/2)*2:trunc(ih/2)*2', '-c:v', 'libx264', '-crf', '26', '-preset', 'slow', `${outDir}/media/${slug}.mp4`]);
-  run('ffmpeg', ['-v', 'error', '-y', '-i', gif, '-frames:v', '1', '-c:v', 'libwebp', '-quality', '80', `${outDir}/media/${slug}.webp`]);
-  media[slug] = { w, h };
+  const gif = readFileSync(`docs/gifs/${slug}.gif`);
+  media[slug] = { w: gif.readUInt16LE(6), h: gif.readUInt16LE(8) };
 }
-run('ffmpeg', ['-v', 'error', '-y', '-i', 'docs/gifs/flow-machine.gif', '-frames:v', '1', `${outDir}/media/og.png`]);
+cpSync('docs/media', `${outDir}/media`, { recursive: true });
 
 run(process.execPath, ['scripts/gallery.mjs', '-o', `${outDir}/gallery/index.html`]);
 
